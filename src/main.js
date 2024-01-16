@@ -1,6 +1,9 @@
 const { app, BrowserWindow, dialog} = require('electron');
 const path = require('path');
 const fs = require('fs');
+import RcpSetting from './setting';
+import RcpSqliteDB from "./rcp_sqlite_db";
+//import ImageBinary from "./binary/image_binary";
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
@@ -27,7 +30,10 @@ const createWindow = () => {
     } else {
       dbPath = path.resolve('D://db/recipe db/recipe.db');
     }
-    
+    RcpSetting.setDatabasePath(dbPath);
+
+    dbPath = RcpSetting.getDatabasePath();
+
     let existDb = fs.existsSync(dbPath);
 
     if (!existDb) {
@@ -40,6 +46,14 @@ const createWindow = () => {
       }, 500);
     }
 
+    //db open
+    let db = new RcpSqliteDB();
+    db.open();
+
+    //Run only once for the first time (due to image file updates)
+    //let imageBinary = new ImageBinary(db);
+    //imageBinary.InsertBinaryToSqliteDB();
+    
   });
 
   // and load the index.html of the app.
