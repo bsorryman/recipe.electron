@@ -10,16 +10,25 @@ export default class CompressBinary {
     }
     
     async InsertBinaryToSqliteDB() {
-        const totalRecipe = this.db.selectTotalRecipe()[0].total;
-        console.log('totalRecipe: ' + totalRecipe);
+        const maxId = this.db.selectMaxId()[0].max_id;
+        console.log('maxId: ' + maxId);
 
         let id = 0;
-        while(id < totalRecipe) {
+        while(id <= maxId) {
             let recipe = this.db.selectRecipeById(id)[0];
+
+            if (recipe === undefined) {
+                console.log('This is undefined.');
+                id++;
+                continue;
+            }
+
             let title = recipe.title;
+
             let ingredients = recipe.ingredients;
             let matchArray = ingredients.match(/'[^']*'/g);
             let ingredientsArray = matchArray.map(match => match.slice(1, -1));
+
             let instructions = recipe.instructions;
             let imageName = recipe.image_name;
     
