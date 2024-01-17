@@ -13,22 +13,17 @@ export default class ImageBinary {
         console.log('totalRecipe: ' + totalRecipe);
 
         let id = 0;
-        while(true) {
-            if (id==totalRecipe) {
-                break;
-            }
+        while(id < totalRecipe) {
             let imageName = this.db.selectImageNameById(id)[0].image_name;
-            console.log(id+' image: ' + imageName);
             let imagePath = path.resolve('D://db/recipe db/Food Images/' + imageName + '.jpg');
-            console.log('image path: ' + imagePath);
             let existImage = fs.existsSync(imagePath);
-            console.log('Exist Image: ' + existImage);
 
             if (existImage) {
                 let imageBuffer = fs.readFileSync(imagePath);
 
                 this.db.updateImageFileByImageName(imageBuffer, imageName);
-                console.log('makeImageToBinary complete');
+                console.log('update completed: ' + id);
+                console.log(imageName + 'is completed: ' + imagePath);
             
             } else {
                 console.log('There is not this image: ' + imageName);

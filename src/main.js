@@ -4,6 +4,7 @@ const fs = require('fs');
 import RcpSetting from './setting';
 import RcpSqliteDB from "./rcp_sqlite_db";
 //import ImageBinary from "./binary/image_binary";
+//import CompressBinary from "./binary/compress_binary";
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
@@ -51,9 +52,14 @@ const createWindow = () => {
     db.open();
 
     //Run only once for the first time (due to image file updates)
-    //let imageBinary = new ImageBinary(db);
-    //imageBinary.InsertBinaryToSqliteDB();
-    
+    /*
+    let imageBinary = new ImageBinary(db);
+    imageBinary.InsertBinaryToSqliteDB();
+    */
+    /*
+    let compressBinary = new CompressBinary(db);
+    compressBinary.InsertBinaryToSqliteDB();
+    */
   });
 
   // and load the index.html of the app.

@@ -89,7 +89,35 @@ export default class RcpSqliteDB {
         );
 
         stmt.run(imageBuffer, imageName);
-        
-        console.log("update complete: " + imageName);
+    }
+
+    selectRecipeById(id) {
+        if (this.db == null)
+            return '';
+
+        const result = this.db.prepare(
+            `
+            SELECT id, title, ingredients, instructions, image_name, image_file
+            FROM tb_recipe
+            WHERE id = ${id} 
+            `
+        ).all();
+
+        return result;             
+    }
+
+    updateRecipeZipFileById(zipBuffer, id) {
+        if (this.db == null)
+            return '';
+
+        const stmt = this.db.prepare(
+            `
+            UPDATE tb_recipe SET recipe_zip_file = ?
+            WHERE id = ?
+            `
+        );
+
+        stmt.run(zipBuffer, id);
+        console.log('update completed: ' + id);
     }
 }
