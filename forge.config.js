@@ -34,13 +34,21 @@ module.exports = {
           config: './webpack.renderer.config.js',
           entryPoints: [
             {
-              html: './src/index.html',
-              js: './src/renderer.js',
               name: 'main_window',
+              html: './src/renderer/main_window/index.html',
+              js: './src/renderer/main_window/renderer.js',
               preload: {
-                js: './src/preload.js',
-              },
+                js: './src/preload.js'
+              }
             },
+            {
+              name: 'search_result',
+              html: './src/renderer/search_result/index.html',
+              js: './src/renderer/search_result/renderer.js',
+              preload: {
+                js: './src/preload.js'
+              }
+            },            
           ],
         },
       },

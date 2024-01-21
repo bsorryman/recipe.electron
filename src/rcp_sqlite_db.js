@@ -62,6 +62,20 @@ export default class RcpSqliteDB {
         return result;            
     }
 
+    selectMaxId() {
+        if (this.db == null)
+            return '';
+
+        const result = this.db.prepare(
+            `
+            SELECT MAX(id) AS max_id
+            FROM tb_recipe
+            `
+        ).all();
+
+        return result;             
+    }
+
     selectImageNameById(id) {
         if (this.db == null)
             return '';
@@ -120,4 +134,24 @@ export default class RcpSqliteDB {
         stmt.run(zipBuffer, id);
         console.log('update completed: ' + id);
     }
+
+    selectAllByKeyword(keyword, offset) {
+        if (this.db == null)
+            return '';
+
+        const result = this.db.prepare(
+            `
+            SELECT a.id, a.title, a.ingredients, a.instructions, a.image_name, a.rank, b.image_file, b.recipe_zip_file
+            FROM tb_fts_recipe a, tb_recipe b
+            WHERE a.id = b.id
+                AND tb_fts_recipe MATCH '${keyword}'
+            ORDER BY a.rank
+            LIMIT ${offset}, 10
+            `
+        ).all();
+
+        return result;    
+    }
+
+
 }
