@@ -1,7 +1,7 @@
 import DatabaseConstructor, {Database} from 'better-sqlite3';
 const log = require('electron-log');
 const fs = require('fs');
-import RcpSetting from './setting';
+import RcpSetting from '../setting';
 
 export default class RcpSqliteDB {
     db = null;

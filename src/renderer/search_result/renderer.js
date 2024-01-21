@@ -29,8 +29,6 @@
 import '../../index.css';
 window.$ = window.jQuery = require('jquery');
 
-console.log('👋 This message is being logged by "renderer.js", included via webpack');
-
 window.onload = () => {  
     //keyword setting for search & paging
     const urlParams = new URLSearchParams(window.location.search);
@@ -68,15 +66,17 @@ function setSearchResult(searchResult) {
                     </div>
                     <div>
                         <strong>Ingredients</strong>
-                        <p>${value.ingredients}</p>
+                        <!--<p>${value.ingredients}</p>-->
                 `;
     
-                /*
-            let ingredients = value.ingredients;
-            ingredients.forEach((value, index) => {
-                child += `<p>- ${value}</p>`;
+            let recipeVal = value;
+            let ingredients = recipeVal.ingredients;
+            let matchArray = ingredients.match(/'[^']*'/g);
+            let ingredientsArray = matchArray.map(match => match.slice(1, -1));            
+            ingredientsArray.forEach(function(ingredient) {
+                child += `<p>* ${ingredient}</p>`;
             });
-*/
+
             child +=
               `</div>            
               <div>
