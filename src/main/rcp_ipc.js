@@ -16,7 +16,6 @@ export default class RcpIPC {
             console.log('main: req_searchRcpListAll');
             try {
                 keyword = keyword.trim();
-                
                 let offset = (pageNum > 1) ?  (pageNum-1)*10 : 0;
 
                 let searchResult = this.db.selectAllByKeyword(keyword,offset);

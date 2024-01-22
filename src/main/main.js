@@ -3,8 +3,8 @@ const path = require('path');
 const fs = require('fs');
 import RcpSetting from '../setting';
 import RcpSqliteDB from "./rcp_sqlite_db";
-//import ImageBinary from "./binary/image_binary";
-//import CompressBinary from "./binary/compress_binary";
+//import ImageBinary from "../binary/image_binary";
+//import CompressBinary from "../binary/compress_binary";
 import RcpIPC from './rcp_ipc';
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
