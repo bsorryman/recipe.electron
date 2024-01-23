@@ -24,10 +24,10 @@ export default class CompressBinary {
             }
 
             let title = recipe.title;
-
-            let ingredients = recipe.ingredients;
-            let matchArray = ingredients.match(/'[^']*'/g);
-            let ingredientsArray = matchArray.map(match => match.slice(1, -1));
+            
+            let ingredients = recipe.ingredients.replace(/""/g, '"');
+            let matchArray = ingredients.match(/'[^']*'|"[^"]*"/g);
+            let ingredientsArray = matchArray.map(match => match.slice(1, -1));  
 
             let instructions = recipe.instructions;
             let imageName = recipe.image_name;

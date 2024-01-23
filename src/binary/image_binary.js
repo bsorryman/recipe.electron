@@ -9,12 +9,21 @@ export default class ImageBinary {
     }
 
     InsertBinaryToSqliteDB() {
-        const totalRecipe = this.db.selectTotalRecipe()[0].total;
-        console.log('totalRecipe: ' + totalRecipe);
+        const maxId = this.db.selectMaxId()[0].max_id;
+        console.log('maxId: ' + maxId);
 
         let id = 0;
-        while(id < totalRecipe) {
-            let imageName = this.db.selectImageNameById(id)[0].image_name;
+        while(id <= maxId) {
+            let imageName = this.db.selectImageNameById(id)[0];
+            
+            if (imageName === undefined) {
+                console.log('This is undefined.');
+                id++;
+                continue;
+            }
+
+            imageName = imageName.image_name;
+
             let imagePath = path.resolve('D://db/recipe db/Food Images/' + imageName + '.jpg');
             let existImage = fs.existsSync(imagePath);
 
