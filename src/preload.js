@@ -7,5 +7,6 @@ contextBridge.exposeInMainWorld('apis', {
     
     req_searchRcpListAll: (keyword, pageNum) => ipcRenderer.send('req_searchRcpListAll', keyword, pageNum),
     resp_searchRcpListAll: (searchResult) => ipcRenderer.on('resp_searchRcpListAll', searchResult),
-
+    req_rcpImageBuffer: (id) => ipcRenderer.send('req_rcpImageBuffer', id),
+    resp_rcpImageBuffer: (imageResult) => ipcRenderer.on('resp_rcpImageBuffer', imageResult)
   });

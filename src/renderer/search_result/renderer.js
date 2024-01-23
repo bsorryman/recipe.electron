@@ -31,7 +31,7 @@ window.$ = window.jQuery = require('jquery');
 
 //Global variable for search & paging
 let gKeyword;
-let gTotalRecipe;
+let gTotalRcp;
 let gLastPage;
 let gRange = 1;
 let gPageNum = 1;
@@ -57,26 +57,29 @@ window.apis.resp_searchRcpListAll((event, searchResult) => {
 
     } else if (searchResult != 'error') { // search success
         setSearchResult(searchResult.resultTable);
-        gTotalRecipe = searchResult.resultTotal[0].total;
+        gTotalRcp = searchResult.resultTotal[0].total;
 
     } else { // error or no results
         alert('else error');
     }
 
-    gLastPage = Math.ceil(gTotalRecipe / 10);
+    gLastPage = Math.ceil(gTotalRcp / 10);
     setPagination(gPageNum);
 
 });
 
 function setSearchResult(searchResult) {
     $('#list').empty();
-    if (gTotalRecipe == 0) {
+    if (gTotalRcp == 0) {
         return;
     }
     try {
         searchResult.forEach((value, index) => {
             let child =
                 `<li>
+                    <div class="detail_summary_img">
+                        <img src="" class="link_img" id="img_${value.id}" />
+                    </div>                
                     <div>
                         <div>
                             <div>
@@ -112,6 +115,7 @@ function setSearchResult(searchResult) {
 
             $('#list').append(child);
         });
+        setRcpImage();
     } catch (e) {
         /**
          * Catch errors when there is no search result 
@@ -121,6 +125,21 @@ function setSearchResult(searchResult) {
     }
 }
 
+function setRcpImage() {
+    let idList = $('.link_img');
+    $.each(idList, (key, value) => {
+        let rcpId = value.id.substring(4, value.id.length);
+  
+        window.apis.req_rcpImageBuffer(rcpId);
+    });
+}
+
+window.apis.resp_rcpImageBuffer((event, imageResult) =>  {
+    let id = imageResult.id;
+    let imageBuffer = imageResult.image_file;
+    $(`#img_${id}`).attr('src', imageBuffer);
+});
+  
 function setPagination(pageNum) {
     const RANGE_SIZE = 10;
     let lastRange = (gLastPage / RANGE_SIZE <= 1) ? 1 : Math.ceil(gLastPage / RANGE_SIZE);

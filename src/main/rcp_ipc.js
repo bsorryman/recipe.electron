@@ -1,4 +1,4 @@
-const {ipcMain} = require('electron');
+const {ipcMain, nativeImage} = require('electron');
 
 export default class RcpIPC {
     mainWindow;
@@ -13,7 +13,6 @@ export default class RcpIPC {
    
     addSearchRcpList() {
         ipcMain.on('req_searchRcpListAll', (event, keyword, pageNum) => {
-            console.log('main: req_searchRcpListAll');
             try {
                 keyword = keyword.trim();
                 let offset = (pageNum > 1) ?  (pageNum-1)*10 : 0;
@@ -30,8 +29,25 @@ export default class RcpIPC {
 
     }
 
+    addRcpimageBuffer() {
+        ipcMain.on('req_rcpImageBuffer', (event, id) => {
+            try {
+                let imageResult = this.db.selectImageFileById(id)[0];
+                imageResult.image_file = nativeImage.createFromBuffer(imageResult.image_file).toDataURL();
+                event.reply('resp_rcpImageBuffer', imageResult);
+
+            } catch (e) {
+                console.log(e);
+                event.reply('resp_rcpImageBuffer', 'error');
+            }
+
+        });
+
+    }    
+
     registerIPC() {
         this.addSearchRcpList();     
+        this.addRcpimageBuffer();
     }
 
 }

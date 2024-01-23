@@ -178,4 +178,20 @@ export default class RcpSqliteDB {
         return result;           
     }
 
+    selectImageFileById(id) {
+        if (this.db == null)
+            return '';
+
+        const result = this.db.prepare(
+            `
+            SELECT id, image_file
+            FROM tb_recipe
+            WHERE id = ${id} 
+            `
+        ).all();
+
+        return result;           
+    }
+
+
 }
