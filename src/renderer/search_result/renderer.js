@@ -31,6 +31,7 @@ window.$ = window.jQuery = require('jquery');
 
 //Global variable for search & paging
 let gKeyword;
+let gColumn;
 let gTotalRcp;
 let gLastPage;
 let gRange = 1;
@@ -40,23 +41,24 @@ window.onload = () => {
     //keyword setting for search & paging
     const urlParams = new URLSearchParams(window.location.search);
     gKeyword = urlParams.get('keyword');
+    gColumn = urlParams.get('column');
     $('#keyword').val(gKeyword);
 
-    getData(gKeyword, 1);
+    requestSearch(gKeyword, gColumn, 1);
 }
 
-function getData(keyword, pageNum) {
+function requestSearch(keyword, column, pageNum) {
     gPageNum = pageNum;
-    window.apis.req_searchRcpListAll(keyword, pageNum);
+    window.apis.req_searchRcpList(keyword, column, pageNum);
 }
 
-window.apis.resp_searchRcpListAll((event, searchResult) => {
+window.apis.resp_searchRcpList((event, searchResult) => {
 
     if (searchResult.length == 0) {
         alert('No results were found for your search.');
 
     } else if (searchResult != 'error') { // search success
-        setSearchResult(searchResult.resultTable);
+        displaySearchResult(searchResult.resultTable);
         gTotalRcp = searchResult.resultTotal[0].total;
 
     } else { // error or no results
@@ -64,11 +66,11 @@ window.apis.resp_searchRcpListAll((event, searchResult) => {
     }
 
     gLastPage = Math.ceil(gTotalRcp / 10);
-    setPagination(gPageNum);
+    displayPagination(gPageNum);
 
 });
 
-function setSearchResult(searchResult) {
+function displaySearchResult(searchResult) {
     $('#list').empty();
     if (gTotalRcp == 0) {
         return;
@@ -82,10 +84,12 @@ function setSearchResult(searchResult) {
                     </div>                
                     <div>
                         <div>
+                            <!--
                             <div>
                                 <strong>Recipe ID</strong>
                                 <p>${value.id}</p>
                             </div>
+                            -->
                             <div>
                                 <strong>Title</strong>
                                 <p>${value.title}</p>
@@ -115,17 +119,17 @@ function setSearchResult(searchResult) {
 
             $('#list').append(child);
         });
-        setRcpImage();
+        displayRcpImage();
     } catch (e) {
         /**
          * Catch errors when there is no search result 
          * so that only empty() is executed when there is no search result.
          */
-        console.log('setSearchResult: catch' + e);
+        console.log('displaySearchResult: catch' + e);
     }
 }
 
-function setRcpImage() {
+function displayRcpImage() {
     let idList = $('.link_img');
     $.each(idList, (key, value) => {
         let rcpId = value.id.substring(4, value.id.length);
@@ -140,7 +144,7 @@ window.apis.resp_rcpImageBuffer((event, imageResult) =>  {
     $(`#img_${id}`).attr('src', imageBuffer);
 });
   
-function setPagination(pageNum) {
+function displayPagination(pageNum) {
     const RANGE_SIZE = 10;
     let lastRange = (gLastPage / RANGE_SIZE <= 1) ? 1 : Math.ceil(gLastPage / RANGE_SIZE);
 
@@ -201,21 +205,21 @@ function setPagination(pageNum) {
 
 //paging envent
 $('.pg_list').on('click', function () {
-    getData(gKeyword, $(this).html());
+    requestSearch(gKeyword, gColumn, $(this).html());
 });
 
 $('#pg_first').on('click', function () {
-    getData(gKeyword, 1);
+    requestSearch(gKeyword, gColumn, 1);
 });
 
 $('#pg_next').on('click', function () {
-    getData(gKeyword, 1 + (gRange * 10));
+    requestSearch(gKeyword, gColumn, 1 + (gRange * 10));
 });
 
 $('#pg_prev').on('click', function () {
-    getData(gKeyword, (gRange - 1) * 10);
+    requestSearch(gKeyword, gColumn, (gRange - 1) * 10);
 });
 
 $('#pg_last').on('click', function () {
-    getData(gKeyword, gLastPage);
+    requestSearch(gKeyword, gColumn, gLastPage);
 });

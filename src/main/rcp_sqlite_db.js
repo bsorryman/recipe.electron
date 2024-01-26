@@ -135,16 +135,19 @@ export default class RcpSqliteDB {
         console.log('update completed: ' + id);
     }
 
-    selectAllByKeyword(keyword, offset) {
+    selectRcpByKeyword(keyword, column, offset) {
         if (this.db == null)
             return '';
 
+        if (column == 'all') {
+            column = 'tb_fts_recipe'
+        }
+
         const resultTable = this.db.prepare(
             `
-            SELECT a.id, a.title, a.ingredients, a.instructions, b.image_name, b.image_file, b.recipe_zip_file
-            FROM tb_fts_recipe a, tb_recipe b
-            WHERE a.id = b.id
-                AND tb_fts_recipe MATCH '${keyword}'
+            SELECT id, title, ingredients, instructions
+            FROM tb_fts_recipe
+            WHERE ${column} MATCH '${keyword}'
             ORDER BY bm25(tb_fts_recipe, 10.0, 5.0)
             LIMIT ${offset}, 10
             `
@@ -154,31 +157,16 @@ export default class RcpSqliteDB {
             `
             SELECT COUNT(*) AS total
             FROM tb_fts_recipe
-            WHERE tb_fts_recipe MATCH '${keyword}'
+            WHERE ${column} MATCH '${keyword}'
             `
         ).all();
 
-        const result = {resultTable, resultTotal};
+        const result = {resultTable, resultTotal}
 
         return result;    
     }
 
-    selectAllTotalByKeyword(keyword) {
-        if (this.db == null)
-            return '';
-
-        const result = this.db.prepare(
-            `
-            SELECT COUNT(*)
-            FROM tb_fts_recipe
-            WHERE tb_fts_recipe MATCH '${keyword}'
-            `
-        ).all();
-
-        return result;           
-    }
-
-    selectImageFileById(id) {
+    selectRcpImageFileById(id) {
         if (this.db == null)
             return '';
 
