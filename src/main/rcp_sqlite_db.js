@@ -181,5 +181,20 @@ export default class RcpSqliteDB {
         return result;           
     }
 
+    selectRcpZipFileById(id) {
+        if (this.db == null)
+            return '';
+
+        const result = this.db.prepare(
+            `
+            SELECT id, title, recipe_zip_file
+            FROM tb_recipe
+            WHERE id = ${id} 
+            `
+        ).all();
+
+        return result;             
+    }
+
 
 }

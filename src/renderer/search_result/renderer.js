@@ -29,7 +29,7 @@
 import '../../index.css';
 window.$ = window.jQuery = require('jquery');
 
-//Global variable for search & paging
+// Global variable for search & paging
 let gKeyword;
 let gColumn;
 let gTotalRcp;
@@ -37,8 +37,10 @@ let gLastPage;
 let gRange = 1;
 let gPageNum = 1;
 
+/**
+ * When loading a search_result page from another page, first set (gKeyword) and search
+ */
 window.onload = () => {
-    //keyword setting for search & paging
     const urlParams = new URLSearchParams(window.location.search);
     gKeyword = urlParams.get('keyword');
     gColumn = urlParams.get('column');
@@ -47,31 +49,43 @@ window.onload = () => {
     requestSearch(gKeyword, gColumn, 1);
 }
 
+/**
+ * A function that requests search results from all columns.
+ * @param {*} keyword 
+ * @param {*} pageNum 
+ */
 function requestSearch(keyword, column, pageNum) {
     gPageNum = pageNum;
-    window.apis.req_searchRcpList(keyword, column, pageNum);
+    window.apis.req_searchRcpList(keyword, column, pageNum); //A search request to the main process.
 }
 
+/**
+ * A listener that receives responses to all column search requests.
+ */
 window.apis.resp_searchRcpList((event, searchResult) => {
-
     if (searchResult.length == 0) {
         alert('No results were found for your search.');
 
-    } else if (searchResult != 'error') { // search success
-        displaySearchResult(searchResult.resultTable);
+    } else if (searchResult != 'error') {
+        displaySearchResult(searchResult.resultTable); // Display received search results.
         gTotalRcp = searchResult.resultTotal[0].total;
 
-    } else { // error or no results
-        alert('else error');
+    } else { 
+        alert('Error');
     }
 
     gLastPage = Math.ceil(gTotalRcp / 10);
-    displayPagination(gPageNum);
+    displayPagination(gPageNum); // After calculating the last page, display 'pagination' immediately.
 
 });
 
+/**
+ * A function that displays the received search results in HTML on the page.
+ * @param {*} searchResult 
+ * @returns 
+ */
 function displaySearchResult(searchResult) {
-    $('#list').empty();
+    $('#list').empty(); //init
     if (gTotalRcp == 0) {
         return;
     }
@@ -79,7 +93,7 @@ function displaySearchResult(searchResult) {
         searchResult.forEach((value, index) => {
             let child =
                 `<li>
-                    <div class="detail_summary_img">
+                    <div>
                         <img src="" class="link_img" id="img_${value.id}" />
                     </div>                
                     <div>
@@ -99,6 +113,7 @@ function displaySearchResult(searchResult) {
                                 <!--<p>${value.ingredients}</p>-->
                 `;
 
+            // Convert 'ingredients' value in string format to array
             let ingredients = value.ingredients.replace(/""/g, '"');
             let matchArray = ingredients.match(/'[^']*'|"[^"]*"/g);
             let ingredientsArray = matchArray.map(match => match.slice(1, -1));
@@ -114,12 +129,22 @@ function displaySearchResult(searchResult) {
                                 <p>${value.instructions}</p>
                             </div>
                         </div>
+                        <div>
+                            <a href="javascript:void(0)" class="download_btn" id="download_${value.id}">Download Recipe File</a>
+                            <a href="javascript:void(0)" class="view_btn" id="view_${value.id}">View Recipe</a>
+                        </div>                        
                     </div>
                 </li>`;
 
             $('#list').append(child);
         });
+        /**
+         * After displaying the search results, add additional functions 
+         * (Because the work to encode the buffer needs to be done in 'Main')
+         */
         displayRcpImage();
+        displayDownloadButton();
+        //displayRcpViewButton();
     } catch (e) {
         /**
          * Catch errors when there is no search result 
@@ -129,21 +154,44 @@ function displaySearchResult(searchResult) {
     }
 }
 
+/**
+ * A function that requests images based on search results
+ */
 function displayRcpImage() {
     let idList = $('.link_img');
     $.each(idList, (key, value) => {
         let rcpId = value.id.substring(4, value.id.length);
-  
-        window.apis.req_rcpImageBuffer(rcpId);
+        window.apis.req_rcpImageSrc(rcpId); //Request images to the main process
     });
 }
 
-window.apis.resp_rcpImageBuffer((event, imageResult) =>  {
+/**
+ * A listener that receives a response to images request 
+ * and displays the images.
+ */
+window.apis.resp_rcpImageSrc((event, imageResult) =>  {
     let id = imageResult.id;
-    let imageBuffer = imageResult.image_file;
-    $(`#img_${id}`).attr('src', imageBuffer);
+    let imageSrc = imageResult.image_file;
+    $(`#img_${id}`).attr('src', imageSrc); //display
 });
-  
+
+/**
+ * A function that displays the button for downloading the zip file.
+ */
+function displayDownloadButton() {
+    let idList = $('.download_btn');
+    $.each(idList, (key, value) => {
+        value.onclick= () => {
+            let rcpId = value.id.substring(9, value.id.length);
+            window.apis.req_rcpZipFile(rcpId); //Request images to the main process
+        }
+    });    
+}
+
+/**
+ * A function that calculate the number of pages and display page buttons
+ * @param {*} pageNum 
+ */
 function displayPagination(pageNum) {
     const RANGE_SIZE = 10;
     let lastRange = (gLastPage / RANGE_SIZE <= 1) ? 1 : Math.ceil(gLastPage / RANGE_SIZE);
@@ -184,7 +232,6 @@ function displayPagination(pageNum) {
             $("#pg_last").show();
         }
 
-
     } else if (gRange > 1 && gRange < lastRange) {
         $("#pg_prev").show();
         $("#pg_first").show();
@@ -203,7 +250,7 @@ function displayPagination(pageNum) {
 }
 
 
-//paging envent
+// paging envent
 $('.pg_list').on('click', function () {
     requestSearch(gKeyword, gColumn, $(this).html());
 });

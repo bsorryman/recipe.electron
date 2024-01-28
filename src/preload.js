@@ -8,6 +8,10 @@ contextBridge.exposeInMainWorld('apis', {
     req_searchRcpList: (keyword, column, pageNum) => ipcRenderer.send('req_searchRcpList', keyword, column, pageNum),
     resp_searchRcpList: (searchResult) => ipcRenderer.on('resp_searchRcpList', searchResult),
 
-    req_rcpImageBuffer: (id) => ipcRenderer.send('req_rcpImageBuffer', id),
-    resp_rcpImageBuffer: (imageResult) => ipcRenderer.on('resp_rcpImageBuffer', imageResult)
+    req_rcpImageSrc: (id) => ipcRenderer.send('req_rcpImageSrc', id),
+    resp_rcpImageSrc: (imageResult) => ipcRenderer.on('resp_rcpImageSrc', imageResult),
+
+    req_rcpZipFile: (id) => ipcRenderer.send('req_rcpZipFile', id),
+    resp_rcpZipFile: (zipResult) => ipcRenderer.send('resp_rcpZipFile', zipResult)
+
   });
