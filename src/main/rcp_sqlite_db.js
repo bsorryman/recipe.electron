@@ -148,7 +148,7 @@ export default class RcpSqliteDB {
             SELECT id, title, ingredients, instructions
             FROM tb_fts_recipe
             WHERE ${column} MATCH '${keyword}'
-            ORDER BY bm25(tb_fts_recipe, 10.0, 5.0)
+            ORDER BY bm25(tb_fts_recipe, 10.0, 3.0)
             LIMIT ${offset}, 10
             `
         ).all();
@@ -187,7 +187,7 @@ export default class RcpSqliteDB {
 
         const result = this.db.prepare(
             `
-            SELECT id, title, recipe_zip_file
+            SELECT id, title, image_name, recipe_zip_file
             FROM tb_recipe
             WHERE id = ${id} 
             `

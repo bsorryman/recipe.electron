@@ -2,14 +2,18 @@ const {ipcMain, nativeImage, app, dialog} = require('electron');
 const path = require('path');
 const fs = require('fs');
 
+import RcpDecompress from './rcp_decompress';
+
 export default class RcpIPC {
     mainWindow;
+    modalWindow;
     db;
 
-    constructor(_mainWindow, _db) {
+    constructor(_mainWindow, _modalWindow, _db) {
         console.log('RcpIPC constructor');
 
         this.mainWindow = _mainWindow;
+        this.modalWindow = _modalWindow;
         this.db = _db;
     }
    
@@ -92,10 +96,58 @@ export default class RcpIPC {
         });
     }
 
+    addRcpViewByDecompress() {
+        ipcMain.on('req_rcpViewByDecompress', (event, id) => {
+            console.log('req_rcpViewByDecompress: ' + id);
+            let zipFileResult = this.db.selectRcpZipFileById(id)[0];
+            let rcpDecompress = new RcpDecompress();
+
+            rcpDecompress.decompressRecipeZipFile(zipFileResult, this.viewRcpDetail, this.modalWindow);
+            
+        });
+    }
+
+    viewRcpDetail(title, rcpImageSrc, rcpString, modalWindow) {
+
+        console.log('viewRcpDetail');
+
+        // Center the modalWindow in the mainWindow      
+        const parentBounds = (modalWindow.getParentWindow()).getBounds();
+
+        const x = parentBounds.x + Math.floor((parentBounds.width - 700) / 2);
+        const y = parentBounds.y + Math.floor((parentBounds.height - 560) / 2);
+
+        modalWindow.setPosition(x, y);
+        modalWindow.setOpacity(0);
+        modalWindow.show();
+
+        // fade in effect
+        let opacity = 0;
+        const interval = setInterval(() => {
+            opacity += 0.25;
+            modalWindow.setOpacity(opacity);
+        
+            if (opacity >= 1) {
+                clearInterval(interval);
+            }
+        }, 25); 
+
+        let viewResult = {
+            title: title, 
+            rcpImageSrc: rcpImageSrc,
+            rcpString: rcpString.toString()
+        };
+
+        modalWindow.webContents.postMessage('resp_rcpViewByDecompress', viewResult);
+
+        return;
+    }
+
     registerIPC() {
         this.addSearchRcpList();     
         this.addRcpimageSrc();
         this.addRcpZipFile();
+        this.addRcpViewByDecompress();
     }
 
 }

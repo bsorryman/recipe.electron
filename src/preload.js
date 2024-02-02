@@ -12,6 +12,8 @@ contextBridge.exposeInMainWorld('apis', {
     resp_rcpImageSrc: (imageResult) => ipcRenderer.on('resp_rcpImageSrc', imageResult),
 
     req_rcpZipFile: (id) => ipcRenderer.send('req_rcpZipFile', id),
-    resp_rcpZipFile: (zipResult) => ipcRenderer.send('resp_rcpZipFile', zipResult)
+
+    req_rcpViewByDecompress: (id) => ipcRenderer.send("req_rcpViewByDecompress", id),
+    resp_rcpViewByDecompress: (viewResult) => ipcRenderer.on("resp_rcpViewByDecompress", viewResult),
 
   });

@@ -56,7 +56,7 @@ window.onload = () => {
  */
 function requestSearch(keyword, column, pageNum) {
     gPageNum = pageNum;
-    window.apis.req_searchRcpList(keyword, column, pageNum); //A search request to the main process.
+    window.apis.req_searchRcpList(keyword, column, pageNum); // A search request to the main process.
 }
 
 /**
@@ -143,8 +143,8 @@ function displaySearchResult(searchResult) {
          * (Because the work to encode the buffer needs to be done in 'Main')
          */
         displayRcpImage();
-        displayDownloadButton();
-        //displayRcpViewButton();
+        setDownloadButton();
+        setRcpViewButton();
     } catch (e) {
         /**
          * Catch errors when there is no search result 
@@ -161,7 +161,7 @@ function displayRcpImage() {
     let idList = $('.link_img');
     $.each(idList, (key, value) => {
         let rcpId = value.id.substring(4, value.id.length);
-        window.apis.req_rcpImageSrc(rcpId); //Request images to the main process
+        window.apis.req_rcpImageSrc(rcpId); // Request images to the main process
     });
 }
 
@@ -176,16 +176,30 @@ window.apis.resp_rcpImageSrc((event, imageResult) =>  {
 });
 
 /**
- * A function that displays the button for downloading the zip file.
+ * A function that sets the button for downloading the zip file.
  */
-function displayDownloadButton() {
+function setDownloadButton() {
     let idList = $('.download_btn');
     $.each(idList, (key, value) => {
         value.onclick= () => {
             let rcpId = value.id.substring(9, value.id.length);
-            window.apis.req_rcpZipFile(rcpId); //Request images to the main process
+            window.apis.req_rcpZipFile(rcpId); // Request images to the main process
         }
     });    
+}
+
+/**
+ * A function that sets the button that displays all the information in the recipe
+ */
+function setRcpViewButton() {
+    let idList = $('.view_btn');
+    $.each(idList, (key, value) => {
+        value.onclick= () => {
+            let rcpId = value.id.substring(5, value.id.length);
+            // Request decompressed zip data from the main process.
+            window.apis.req_rcpViewByDecompress(rcpId); 
+        }
+    });        
 }
 
 /**

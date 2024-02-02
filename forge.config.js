@@ -48,7 +48,15 @@ module.exports = {
               preload: {
                 js: './src/preload.js'
               }
-            },            
+            },          
+            {
+              name: 'rcp_modal',
+              html: './src/renderer/rcp_modal/index.html',
+              js: './src/renderer/rcp_modal/renderer.js',
+              preload: {
+                js: './src/preload.js'
+              }
+            },                 
           ],
         },
       },

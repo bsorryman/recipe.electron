@@ -23,6 +23,22 @@ const createWindow = () => {
     },
   });
 
+  const modalWindow = new BrowserWindow({
+    modal: true,
+    parent: mainWindow,
+    width: 700,
+    height: 560,
+    minWidth: 700,
+    minHeight: 560,    
+    show: false,
+    opacity: 0,
+    hasShadow: false,    
+    titleBarStyle: 'hidden',
+    webPreferences: {
+        preload: RCP_MODAL_PRELOAD_WEBPACK_ENTRY,
+    },            
+  });
+
   mainWindow.once('ready-to-show', () => {
     console.log('ready-to-show');
     mainWindow.show();
@@ -63,15 +79,22 @@ const createWindow = () => {
     compressBinary.InsertBinaryToSqliteDB();
     */
 
-    rcpIPC = new RcpIPC(mainWindow, db);
+    rcpIPC = new RcpIPC(mainWindow, modalWindow, db);
     rcpIPC.registerIPC();
   });
 
   // and load the index.html of the app.
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
+  modalWindow.loadURL(RCP_MODAL_WEBPACK_ENTRY);
 
+  modalWindow.on('show', () => {
+    modalWindow.setSize(700, 560);
+    modalWindow.webContents.openDevTools();
+
+  });
   // Open the DevTools.
   mainWindow.webContents.openDevTools();
+
 };
 
 // This method will be called when Electron has finished
