@@ -1,200 +1,198 @@
-import DatabaseConstructor, {Database} from 'better-sqlite3';
+import DatabaseConstructor, { Database } from 'better-sqlite3';
 const log = require('electron-log');
 const fs = require('fs');
 import RcpSetting from '../setting';
 
 export default class RcpSqliteDB {
-    db = null;
-    dbPath = '';
-    is_open = false;
+  db = null;
+  dbPath = '';
+  is_open = false;
 
-    constructor() {
+  constructor() {
+  }
+
+  open() {
+    console.log('Node env: ' + process.env.NODE_ENV);
+
+    if (process.env.NODE_ENV == 'production' || process.env.NODE_ENV == 'stage') {
+      this.dbPath = RcpSetting.getDatabasePath();
+    } else {
+      this.dbPath = RcpSetting.getDatabasePath();
     }
 
-    open() {
-        console.log('Node env: ' + process.env.NODE_ENV);
-
-        if (process.env.NODE_ENV == 'production' || process.env.NODE_ENV == 'stage') {
-            this.dbPath = RcpSetting.getDatabasePath();
-        } else {
-            this.dbPath = RcpSetting.getDatabasePath();
-        }
-       
-        if (process.env.NODE_ENV == 'stage') {
-            log.debug(dbPath);
-        }
-        
-        let existDb = fs.existsSync(this.dbPath);
-
-        if (existDb) {
-            this.db = new DatabaseConstructor(this.dbPath);
-
-            this.db.prepare("SELECT * FROM tb_recipe LIMIT 1").all();
-
-            this.is_open = true;
-        }
-
-        console.log('db is open: ' + this.dbPath);
-
-        return this.is_open;
+    if (process.env.NODE_ENV == 'stage') {
+      log.debug(dbPath);
     }
 
-    isOpen() {
-        return this.is_open;
+    let existDb = fs.existsSync(this.dbPath);
+
+    if (existDb) {
+      this.db = new DatabaseConstructor(this.dbPath);
+
+      this.db.prepare("SELECT * FROM tb_recipe LIMIT 1").all();
+
+      this.is_open = true;
     }
 
-    close() {
-        if (this.db != null)
-           this.db.close();
+    console.log('db is open: ' + this.dbPath);
+
+    return this.is_open;
+  }
+
+  isOpen() {
+    return this.is_open;
+  }
+
+  close() {
+    if (this.db != null)
+      this.db.close();
+  }
+
+  selectTotalRecipe() {
+    if (this.db == null)
+      return '';
+
+    const result = this.db.prepare(
+      `
+      SELECT COUNT(*) AS total
+      FROM tb_recipe
+      `
+    ).all();
+
+    return result;
+  }
+
+  selectMaxId() {
+    if (this.db == null)
+      return '';
+
+    const result = this.db.prepare(
+      `
+      SELECT MAX(id) AS max_id
+      FROM tb_recipe
+      `
+    ).all();
+
+    return result;
+  }
+
+  selectImageNameById(id) {
+    if (this.db == null)
+      return '';
+
+    const result = this.db.prepare(
+      `
+      SELECT image_name
+      FROM tb_recipe
+      WHERE id = ${id} 
+      `
+    ).all();
+
+    return result;
+  }
+
+  updateImageFileByImageName(imageBuffer, imageName) {
+    if (this.db == null)
+      return '';
+
+    const stmt = this.db.prepare(
+      `
+      UPDATE tb_recipe SET image_file = ?
+      WHERE image_name = ?
+      `
+    );
+
+    stmt.run(imageBuffer, imageName);
+  }
+
+  selectRecipeById(id) {
+    if (this.db == null)
+      return '';
+
+    const result = this.db.prepare(
+      `
+      SELECT id, title, ingredients, instructions, image_name, image_file
+      FROM tb_recipe
+      WHERE id = ${id} 
+      `
+    ).all();
+
+    return result;
+  }
+
+  updateRecipeZipFileById(zipBuffer, id) {
+    if (this.db == null)
+      return '';
+
+    const stmt = this.db.prepare(
+      `
+      UPDATE tb_recipe SET recipe_zip_file = ?
+      WHERE id = ?
+      `
+    );
+
+    stmt.run(zipBuffer, id);
+    console.log('update completed: ' + id);
+  }
+
+  selectRcpByKeyword(keyword, column, offset) {
+    if (this.db == null)
+      return '';
+
+    if (column == 'all') {
+      column = 'tb_fts_recipe'
     }
 
-    selectTotalRecipe() {
-        if (this.db == null)
-            return '';
+    const resultTable = this.db.prepare(
+      `
+      SELECT id, title, ingredients, instructions
+      FROM tb_fts_recipe
+      WHERE ${column} MATCH '${keyword}'
+      ORDER BY bm25(tb_fts_recipe, 10.0, 3.0)
+      LIMIT ${offset}, 10
+      `
+    ).all();
 
-        const result = this.db.prepare(
-            `
-            SELECT COUNT(*) AS total
-            FROM tb_recipe
-            `
-        ).all();
+    const resultTotal = this.db.prepare(
+      `
+      SELECT COUNT(*) AS total
+      FROM tb_fts_recipe
+      WHERE ${column} MATCH '${keyword}'
+      `
+    ).all();
 
-        return result;            
-    }
+    const result = { resultTable, resultTotal }
 
-    selectMaxId() {
-        if (this.db == null)
-            return '';
+    return result;
+  }
 
-        const result = this.db.prepare(
-            `
-            SELECT MAX(id) AS max_id
-            FROM tb_recipe
-            `
-        ).all();
+  selectRcpImageFileById(id) {
+    if (this.db == null)
+      return '';
 
-        return result;             
-    }
+    const result = this.db.prepare(
+      `
+      SELECT id, image_file
+      FROM tb_recipe
+      WHERE id = ${id} 
+      `
+    ).all();
 
-    selectImageNameById(id) {
-        if (this.db == null)
-            return '';
+    return result;
+  }
 
-        const result = this.db.prepare(
-            `
-            SELECT image_name
-            FROM tb_recipe
-            WHERE id = ${id} 
-            `
-        ).all();
+  selectRcpZipFileById(id) {
+    if (this.db == null)
+      return '';
 
-        return result;        
-    }
+    const result = this.db.prepare(
+      `
+      SELECT id, title, image_name, recipe_zip_file
+      FROM tb_recipe
+      WHERE id = ${id} 
+      `
+    ).all();
 
-    updateImageFileByImageName(imageBuffer, imageName) {
-        if (this.db == null)
-            return '';
-
-        const stmt = this.db.prepare(
-            `
-            UPDATE tb_recipe SET image_file = ?
-            WHERE image_name = ?
-            `
-        );
-
-        stmt.run(imageBuffer, imageName);
-    }
-
-    selectRecipeById(id) {
-        if (this.db == null)
-            return '';
-
-        const result = this.db.prepare(
-            `
-            SELECT id, title, ingredients, instructions, image_name, image_file
-            FROM tb_recipe
-            WHERE id = ${id} 
-            `
-        ).all();
-
-        return result;             
-    }
-
-    updateRecipeZipFileById(zipBuffer, id) {
-        if (this.db == null)
-            return '';
-
-        const stmt = this.db.prepare(
-            `
-            UPDATE tb_recipe SET recipe_zip_file = ?
-            WHERE id = ?
-            `
-        );
-
-        stmt.run(zipBuffer, id);
-        console.log('update completed: ' + id);
-    }
-
-    selectRcpByKeyword(keyword, column, offset) {
-        if (this.db == null)
-            return '';
-
-        if (column == 'all') {
-            column = 'tb_fts_recipe'
-        }
-
-        const resultTable = this.db.prepare(
-            `
-            SELECT id, title, ingredients, instructions
-            FROM tb_fts_recipe
-            WHERE ${column} MATCH '${keyword}'
-            ORDER BY bm25(tb_fts_recipe, 10.0, 3.0)
-            LIMIT ${offset}, 10
-            `
-        ).all();
-
-        const resultTotal = this.db.prepare(
-            `
-            SELECT COUNT(*) AS total
-            FROM tb_fts_recipe
-            WHERE ${column} MATCH '${keyword}'
-            `
-        ).all();
-
-        const result = {resultTable, resultTotal}
-
-        return result;    
-    }
-
-    selectRcpImageFileById(id) {
-        if (this.db == null)
-            return '';
-
-        const result = this.db.prepare(
-            `
-            SELECT id, image_file
-            FROM tb_recipe
-            WHERE id = ${id} 
-            `
-        ).all();
-
-        return result;           
-    }
-
-    selectRcpZipFileById(id) {
-        if (this.db == null)
-            return '';
-
-        const result = this.db.prepare(
-            `
-            SELECT id, title, image_name, recipe_zip_file
-            FROM tb_recipe
-            WHERE id = ${id} 
-            `
-        ).all();
-
-        return result;             
-    }
-
-
+    return result;
+  }
 }
