@@ -18,6 +18,7 @@ const createWindow = () => {
   const mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
+    titleBarStyle: 'hidden',
     webPreferences: {
       preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
     },
@@ -83,18 +84,24 @@ const createWindow = () => {
     rcpIPC.registerIPC();
   });
 
+  mainWindow.on('unmaximize', () => {
+    mainWindow.webContents.send('viewMaximizeBtn', 'unmaximize');
+  });
+  
+  mainWindow.on('maximize', () => {
+    mainWindow.webContents.send('viewMaximizeBtn', 'maximize');
+  });
+  
   // and load the index.html of the app.
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
   modalWindow.loadURL(RCP_MODAL_WEBPACK_ENTRY);
 
   modalWindow.on('show', () => {
     modalWindow.setSize(700, 560);
-    modalWindow.webContents.openDevTools();
-
+    //modalWindow.webContents.openDevTools();
   });
   // Open the DevTools.
-  mainWindow.webContents.openDevTools();
-
+  //mainWindow.webContents.openDevTools();
 };
 
 // This method will be called when Electron has finished

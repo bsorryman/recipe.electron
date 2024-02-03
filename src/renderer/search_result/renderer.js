@@ -27,6 +27,8 @@
  */
 
 import '../../index.css';
+import { Titlebar } from '../title_bar'
+
 window.$ = window.jQuery = require('jquery');
 
 // Global variable for search & paging
@@ -41,6 +43,8 @@ let gPageNum = 1;
  * When loading a search_result page from another page, first set (gKeyword) and search
  */
 window.onload = () => {
+    new Titlebar('main');
+
     const urlParams = new URLSearchParams(window.location.search);
     gKeyword = urlParams.get('keyword');
     gColumn = urlParams.get('column');

@@ -16,7 +16,58 @@ export default class RcpIPC {
         this.modalWindow = _modalWindow;
         this.db = _db;
     }
-   
+
+    addTitleBar() {
+        ipcMain.handle('minimize', (event, thisWindow) => {
+            if (thisWindow=='main') {
+                this.mainWindow.minimize();
+            } else {
+                this.modalWindow.minimize();
+            }
+        });
+
+        ipcMain.handle('maximize', (event, thisWindow) => {
+            if (thisWindow=='main') {
+                this.mainWindow.maximize();
+            } else {
+                this.modalWindow.maximize();
+            }
+        });
+
+        ipcMain.handle('unmaximize', (event, thisWindow) => {
+            if (thisWindow=='main') {
+                this.mainWindow.unmaximize();
+            } else {
+                this.modalWindow.unmaximize();
+            }
+        });
+
+        ipcMain.handle('close', (event, thisWindow) => {
+            if (thisWindow=='main') {
+                this.mainWindow.close();
+            } else {
+                // fade out effect
+                /*
+                * If you close modalWindow, 
+                * it cannot be reused again, so hide it.
+                */
+                let opacity = 1;
+                const interval = setInterval(() => {
+                  opacity -= 0.25;
+                  this.modalWindow.setOpacity(opacity);
+            
+                  if (opacity <= 0) {
+                    clearInterval(interval);
+                    this.modalWindow.setHasShadow(false);
+                    this.modalWindow.hide(); 
+                    this.modalWindow.unmaximize();
+                    this.mainWindow.focus();
+                  }
+                }, 25); 
+            }
+        });
+    }
+
     addSearchRcpList() {
         ipcMain.on('req_searchRcpList', (event, keyword, column, pageNum) => {
             try {
@@ -144,6 +195,7 @@ export default class RcpIPC {
     }
 
     registerIPC() {
+        this.addTitleBar();
         this.addSearchRcpList();     
         this.addRcpimageSrc();
         this.addRcpZipFile();

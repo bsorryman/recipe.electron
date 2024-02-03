@@ -6,7 +6,23 @@
 
   </head>
   <body>
-    <h1>Search Result</h1>
+    <div style="-webkit-app-region: drag; display: inline;">
+      Recipe Search Result ------------------------------
+    </div>    
+    <div style="display: inline;"> 
+      <button type="button" id="minimize">
+        <span>mini</span>
+      </button>
+      <button type="button" id="unmaximize" style="display: none;">
+        <span>unMax</span>
+      </button>
+      <button type="button" id="maximize">
+        <span>Max</span>
+      </button>
+      <button type="button" id="close">
+        <span>X</span>
+      </button>
+    </div>       
     <div>
       <form id="searchForm" action="../search_result/index.html">
         <input id="keyword" name="keyword" type="text" placeholder="Recipe Search">

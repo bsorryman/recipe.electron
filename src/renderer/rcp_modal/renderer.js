@@ -29,6 +29,12 @@
 import '../../index.css';
 window.$ = window.jQuery = require('jquery');
 
+import { Titlebar } from '../title_bar'
+
+window.onload = () => {
+  new Titlebar('modal');
+}
+
 /**
  * A listener that receives decompressed recipe data (Image, All data) 
  * and displays it in a modal window

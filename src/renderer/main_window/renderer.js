@@ -28,4 +28,10 @@
 
 import '../../index.css';
 
+import { Titlebar } from '../title_bar'
+
+window.onload = () => {
+  new Titlebar('main');
+}
+
 console.log('👋 This message is being logged by "renderer.js", included via webpack');
