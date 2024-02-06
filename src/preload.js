@@ -9,7 +9,7 @@ contextBridge.exposeInMainWorld('apis', {
     unmaximize: (thisWindow) => ipcRenderer.invoke('unmaximize', thisWindow),
     close: (thisWindow) => ipcRenderer.invoke('close', thisWindow),
 
-    onTitlebar: (callback) => ipcRenderer.on('viewMaximizeBtn', callback),
+    viewMaximizeBtn: (callback) => ipcRenderer.on('viewMaximizeBtn', callback),
 
     req_searchRcpList: (keyword, column, pageNum) => ipcRenderer.send('req_searchRcpList', keyword, column, pageNum),
     resp_searchRcpList: (searchResult) => ipcRenderer.on('resp_searchRcpList', searchResult),

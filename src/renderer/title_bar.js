@@ -4,7 +4,7 @@ window.$ = window.jQuery = require('jquery');
  * A listener that determines which 'maximize' or 'unmaximize' buttons 
  * to display on the title bar
  */
-window.apis.onTitlebar((event, value) => {
+window.apis.viewMaximizeBtn((event, value) => {
   if (value == 'unmaximize') {
     $('#unmaximize').hide();
     $('#maximize').show();
@@ -22,8 +22,8 @@ export class Titlebar {
   }
 
   /**
-   * A function that sets the appropriate click listener f
-   * or the title bar buttons of '_thisWindow'.
+   * A function that sets the appropriate click listener
+   * for the title bar buttons of '_thisWindow'.
    * @param {*} _thisWindow 
    */
   initTitlebar(_thisWindow) {

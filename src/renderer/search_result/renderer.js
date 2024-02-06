@@ -67,8 +67,14 @@ function requestSearch(keyword, column, pageNum) {
  * A listener that receives responses to all column search requests.
  */
 window.apis.resp_searchRcpList((event, searchResult) => {
-  if (searchResult.length == 0) {
+  if (searchResult.resultTable.length == 0) {
     alert('No results were found for your search.');
+    $('#keyword').trigger('focus');
+
+    $('#list').empty(); //search result hide
+    $('#pg_div').hide(); //pagination hide
+
+    gTotalRcp = 0;
 
   } else if (searchResult != 'error') {
     displaySearchResult(searchResult.resultTable); // Display received search results.
@@ -267,7 +273,6 @@ function displayPagination(pageNum) {
 
   }
 
-  $('.result').scrollTop(0);
 }
 
 

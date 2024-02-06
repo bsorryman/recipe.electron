@@ -1,29 +1,17 @@
 import DatabaseConstructor, { Database } from 'better-sqlite3';
 const log = require('electron-log');
 const fs = require('fs');
-import RcpSetting from '../setting';
 
 export default class RcpSqliteDB {
   db = null;
-  dbPath = '';
+  dbPath;
   is_open = false;
 
-  constructor() {
+  constructor(_dbPath) {
+    this.dbPath = _dbPath;
   }
 
   open() {
-    console.log('Node env: ' + process.env.NODE_ENV);
-
-    if (process.env.NODE_ENV == 'production' || process.env.NODE_ENV == 'stage') {
-      this.dbPath = RcpSetting.getDatabasePath();
-    } else {
-      this.dbPath = RcpSetting.getDatabasePath();
-    }
-
-    if (process.env.NODE_ENV == 'stage') {
-      log.debug(dbPath);
-    }
-
     let existDb = fs.existsSync(this.dbPath);
 
     if (existDb) {
@@ -46,20 +34,6 @@ export default class RcpSqliteDB {
   close() {
     if (this.db != null)
       this.db.close();
-  }
-
-  selectTotalRecipe() {
-    if (this.db == null)
-      return '';
-
-    const result = this.db.prepare(
-      `
-      SELECT COUNT(*) AS total
-      FROM tb_recipe
-      `
-    ).all();
-
-    return result;
   }
 
   selectMaxId() {

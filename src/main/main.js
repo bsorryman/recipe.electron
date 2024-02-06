@@ -1,8 +1,7 @@
 const { app, BrowserWindow, dialog} = require('electron');
 const path = require('path');
 const fs = require('fs');
-import RcpSetting from '../setting';
-import RcpSqliteDB from "./rcp_sqlite_db";
+import RcpSetting from '../rcp_setting';
 //import ImageBinary from "../binary/image_binary";
 //import CompressBinary from "../binary/compress_binary";
 import RcpIPC from './rcp_ipc';
@@ -13,6 +12,8 @@ if (require('electron-squirrel-startup')) {
 }
 
 let rcpIPC;
+let rcpWorker;
+
 const createWindow = () => {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
@@ -21,6 +22,7 @@ const createWindow = () => {
     titleBarStyle: 'hidden',
     webPreferences: {
       preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
+      nodeIntegrationInWorker: true
     },
   });
 
@@ -37,6 +39,7 @@ const createWindow = () => {
     titleBarStyle: 'hidden',
     webPreferences: {
         preload: RCP_MODAL_PRELOAD_WEBPACK_ENTRY,
+        nodeIntegrationInWorker: true
     },            
   });
 
@@ -67,9 +70,11 @@ const createWindow = () => {
     }
 
     //db open
-    let db = new RcpSqliteDB();
+    // it is move to worker process
+    /*
+    let db = new RcpSqliteDB(dbPath);
     db.open();
-
+    */
     //Run only once for the first time (due to image file updates)
     /*
     let imageBinary = new ImageBinary(db);
@@ -79,8 +84,7 @@ const createWindow = () => {
     let compressBinary = new CompressBinary(db);
     compressBinary.InsertBinaryToSqliteDB();
     */
-
-    rcpIPC = new RcpIPC(mainWindow, modalWindow, db);
+    rcpIPC = new RcpIPC(mainWindow, modalWindow);
     rcpIPC.registerIPC();
   });
 
