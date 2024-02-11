@@ -19,6 +19,7 @@ module.exports = {
     path: path.resolve(__dirname, '.webpack/main'),
   },  
   plugins: [
+    /*
     new CopyWebpackPlugin({
       patterns: [
         {
@@ -30,5 +31,6 @@ module.exports = {
         concurrency: 1,
       },
     }),
+    */
   ],  
 };
