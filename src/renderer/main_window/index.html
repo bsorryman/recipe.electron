@@ -1,41 +1,74 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Hello World!</title>
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>recipe</title>
+    <link rel="stylesheet" href="../assets/css/theme.css" />
   </head>
-  <body>
-    <div style="-webkit-app-region: drag; display: inline;">
-      Recipe Searcg Electron App ------------------------------
+  <body class="main-body">
+    <div class="window-top-bar">
+      <div class="title_wrap">
+        <span class="favicon"><img src="../assets/img/favicon.png" alt="favicon" /></span>
+        <h1 class="title">Recipe</h1>
+      </div>
+      <div class="btn_wrap">
+        <button type="button" id="minimize" class="min"><span class="txt_hidden">window minimization</span></button>
+        <button type="button" id="unmaximize" class="un_max" style="display: none;"><span class="txt_hidden">window unmaximize</span></button>
+        <button type="button" id="maximize" class="max"><span class="txt_hidden">window maximize</span></button>
+        <button type="button" id="close" class="close"><span class="txt_hidden">window close</span></button>
+      </div>
     </div>
-    <div style="display: inline;">
-      <button type="button" id="minimize">
-        <span>mini</span>
-      </button>
-      <button type="button" id="unmaximize" style="display: none;">
-        <span>unMax</span>
-      </button>
-      <button type="button" id="maximize">
-        <span>Max</span>
-      </button>
-      <button type="button" id="close">
-        <span>X</span>
-      </button>
-    </div>    
-    <h1>💖 Hello World!</h1>
-    <p>Welcome to your Electron application.</p>
-    <div>
-      <form id="searchForm" action="../search_result/index.html">
-        <input id="keyword" name="keyword" type="text" placeholder="Recipe Search">
-        <select id="column" name="column">
-          <option value="all">All</option>
-          <option value="title">Title</option>
-          <option value="ingredients">Ingredients</option>
-          <option value="instructions">Instructions</option>
-        </select>
-        <input id="searchBtn" type="submit">
-      </form>
-    </div>
+
+    <header>
+      <div class="inner_wrap">
+        <div class="header-content">
+          <h2 class="logo">
+            <span class="txt_hidden">Home icon</span>
+          </h2>
+          <ul class="page-link-wrap">
+            <li class="index active">
+              <a href="/index.html">HOME</a>
+            </li>
+            <li class="sample">
+              <a href="/sample.html">All Recipe</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </header>
+
+    <main class="index-main">
+      <div class="inner_wrap">
+        <div class="text-box">
+          <p class="txt1">TODAY'S RECIPES</p>
+          <p class="txt2">
+            What should <br />
+            I eat today
+          </p>
+          <p class="txt3">
+            Recipe for cooking beginners! <br />
+            Enjoy delicious and healthy home-cooked meals today.
+          </p>
+        </div>
+        <div class="search-box">
+          <form id="searchForm" action="../search_result/index.html" method="post">
+            <input type="text" placeholder="Search for the recipe you want.">
+            <button type="button" class="icon-search"><span class="txt_hidden">Visaul Saerch Button</span></button>
+            <select id="column" name="column">
+              <option value="all">All</option>
+              <option value="title">Title</option>
+              <option value="ingredients">Ingredients</option>
+              <option value="instructions">Instructions</option>
+            </select>          
+          </form>
+        </div>
+      </div>
+    </main>
+    <footer>
+      <div class="inner_warp">
+        <p class="copy">made by kangsun & jinsoo (c) all rights reserved</p>
+      </div>
+    </footer>
   </body>
 </html>
