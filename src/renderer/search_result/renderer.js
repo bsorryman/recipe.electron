@@ -35,10 +35,10 @@ window.$ = window.jQuery = require('jquery');
 let gKeyword;
 let gColumn;
 let gTotalRcp;
-let gLastPage;
-let gRange = 1;
+//let gLastPage;
+//let gRange = 1;
 let gPageNum = 1;
-
+let gPageNomore = false;
 /**
  * When loading a search_result page from another page, first set (gKeyword) and search
  */
@@ -51,6 +51,7 @@ window.onload = () => {
   $('#keyword').val(gKeyword);
 
   requestSearch(gKeyword, gColumn, 1);
+
 }
 
 /**
@@ -68,13 +69,17 @@ function requestSearch(keyword, column, pageNum) {
  */
 window.apis.resp_searchRcpList((event, searchResult) => {
   if (searchResult.resultTable.length == 0) {
-    alert('No results were found for your search.');
-    $('#keyword').trigger('focus');
-
-    $('#list').empty(); //search result hide
-    $('#pg_div').hide(); //pagination hide
-
-    gTotalRcp = 0;
+    if (gPageNum>1 && gPageNomore == false) {
+      alert('There are no more results to display.');
+      gPageNomore = true;
+    } else if (gPageNum==1 && gPageNomore == false) {
+      alert('No results were found for your search.');
+      $('#keyword').trigger('focus');
+  
+      $('#list').empty(); //search result hide
+      //$('#pg_div').hide(); //pagination hide
+      //gTotalRcp = 0;
+    }
 
   } else if (searchResult != 'error') {
     displaySearchResult(searchResult.resultTable); // Display received search results.
@@ -84,9 +89,8 @@ window.apis.resp_searchRcpList((event, searchResult) => {
     alert('Error');
   }
 
-  gLastPage = Math.ceil(gTotalRcp / 10);
-  displayPagination(gPageNum); // After calculating the last page, display 'pagination' immediately.
-
+  //gLastPage = Math.ceil(gTotalRcp / 10);
+  //displayPagination(gPageNum); // After calculating the last page, display 'pagination' immediately.
 });
 
 /**
@@ -95,10 +99,11 @@ window.apis.resp_searchRcpList((event, searchResult) => {
  * @returns 
  */
 function displaySearchResult(searchResult) {
-  $('#list').empty(); //init
+  //$('#list').empty(); //init
   if (gTotalRcp == 0) {
     return;
   }
+  let idList = [];
   try {
     searchResult.forEach((value, index) => {
       let child =
@@ -119,12 +124,10 @@ function displaySearchResult(searchResult) {
                 <strong>Title</strong>
                 <p>${value.title}</p>
               </div>
-              <div>
-                <strong>Ingredients</strong>
-                <!--<p>${value.ingredients}</p>-->
         `;
-
+      
       // Convert 'ingredients' value in string format to array
+      /*
       let ingredients = value.ingredients.replace(/""/g, '"');
       let matchArray = ingredients.match(/'[^']*'|"[^"]*"/g);
       let ingredientsArray = matchArray.map(match => match.slice(1, -1));
@@ -132,14 +135,9 @@ function displaySearchResult(searchResult) {
       ingredientsArray.forEach(function (ingredient) {
         child += `<p>* ${ingredient}</p>`;
       });
-
+      */
       child +=
         `
-              </div>            
-              <div>
-                <strong>Instructions</strong>
-                <p>${value.instructions}</p>
-              </div>
             </div>
             <div>
               <a href="javascript:void(0)" class="download_btn" id="download_${value.id}">Download Recipe File</a>
@@ -150,12 +148,13 @@ function displaySearchResult(searchResult) {
         `;
 
       $('#list').append(child);
+      idList.push(`${value.id}`);
     });
     /**
      * After displaying the search results, add additional functions 
      * (Because the work to encode the buffer needs to be done in 'Main')
      */
-    displayRcpImage();
+    displayRcpImage(idList);
     setDownloadButton();
     setRcpViewButton();
   } catch (e) {
@@ -164,17 +163,18 @@ function displaySearchResult(searchResult) {
      * so that only empty() is executed when there is no search result.
      */
     console.log('displaySearchResult: catch' + e);
+    displaySearchResult
   }
 }
 
 /**
  * A function that requests images based on search results
  */
-function displayRcpImage() {
-  let idList = $('.link_img');
+function displayRcpImage(idList) {
+  //let idList = $('.link_img');
   $.each(idList, (key, value) => {
-    let rcpId = value.id.substring(4, value.id.length);
-    window.apis.req_rcpImageSrc(rcpId); // Request images to the main process
+    //let rcpId = value.id.substring(4, value.id.length);
+    window.apis.req_rcpImageSrc(value); // Request images to the main process
   });
 }
 
@@ -215,10 +215,19 @@ function setRcpViewButton() {
   });
 }
 
+
+// Infinite Scroll (pagination)
+window.addEventListener('scroll', function() {
+  if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+    requestSearch(gKeyword, gColumn, gPageNum+1); 
+  }
+});
+
 /**
  * A function that calculate the number of pages and display page buttons
  * @param {*} pageNum 
  */
+/*
 function displayPagination(pageNum) {
   const RANGE_SIZE = 10;
   let lastRange = (gLastPage / RANGE_SIZE <= 1) ? 1 : Math.ceil(gLastPage / RANGE_SIZE);
@@ -275,7 +284,6 @@ function displayPagination(pageNum) {
 
 }
 
-
 // paging envent
 $('.pg_list').on('click', function () {
   requestSearch(gKeyword, gColumn, $(this).html());
@@ -296,3 +304,4 @@ $('#pg_prev').on('click', function () {
 $('#pg_last').on('click', function () {
   requestSearch(gKeyword, gColumn, gLastPage);
 });
+*/
