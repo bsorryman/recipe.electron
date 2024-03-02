@@ -19,18 +19,17 @@ module.exports = {
     path: path.resolve(__dirname, '.webpack/main'),
   },  
   plugins: [
-    /*
     new CopyWebpackPlugin({
-      patterns: [
-        {
-          from: path.resolve('./src/main', 'worker'),
-          to: path.resolve('./.webpack/main', 'worker'),
-        },
-      ],
-      options: {
-        concurrency: 1,
-      },
-    }),
-    */
-  ],  
+        patterns: [
+          {
+            from: path.resolve('./src', 'resources'),
+            to: path.resolve('./.webpack/main', 'resources'),
+          },
+          {
+            from: path.resolve('./src', 'assets'),
+            to: path.resolve('./.webpack/renderer', 'assets'),
+          },
+        ],
+      }),
+    ],  
 };

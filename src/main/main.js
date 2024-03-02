@@ -17,8 +17,10 @@ let rcpWorker;
 const createWindow = () => {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: 1024,
+    height: 720,
+    minWidth: 900,
+    minHeight: 600,    
     titleBarStyle: 'hidden',
     webPreferences: {
       preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,

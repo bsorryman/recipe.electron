@@ -26,8 +26,6 @@
  * ```
  */
 
-import '../../index.css';
-
 import { Titlebar } from '../title_bar'
 
 window.onload = () => {

@@ -5,7 +5,7 @@ import RcpSqliteDB from '../rcp_sqlite_db';
 const { dbPath } = workerData;
 let db = null;
 
-function open() {
+function dbOpen() {
   try {
     console.log('worker db open');
     db = new RcpSqliteDB(dbPath);
@@ -87,7 +87,7 @@ parentPort.on('message', (_workerData) => {
   }
 });
 
-open();
+dbOpen();
 
 process.on('exit', (code) => {
   console.log(`[worker] Exit event in worker.`);
