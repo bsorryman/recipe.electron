@@ -3,6 +3,48 @@
   padding: 0;
 }
 
+@font-face {
+  font-family: "MyriadPro-Regular";
+  src: url("/assets/font/MyriadPro-Regular.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "MyriadPro-Bold";
+  src: url("/assets/font/MyriadPro-Bold.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "NotoSansKR-Regular";
+  src: url("/assets/font/NotoSansKR-Regular.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "NotoSansKR-SemiBold";
+  src: url("/assets/font/NotoSansKR-SemiBold.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "palatinolinotype-bold";
+  src: url("/assets/font/palatinolinotype_bold.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "palatinolinotype_roman";
+  src: url("/assets/font/palatinolinotype_roman.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
 /* http://meyerweb.com/eric/tools/css/reset/ 
    v2.0 | 20110126
    License: none (public domain)
@@ -92,8 +134,9 @@ video {
   padding: 0;
   border: 0;
   font-size: 100%;
-  font: inherit;
+  font-weight: "NotoSansKR-Regular";
   vertical-align: baseline;
+  color: #111;
 }
 
 /* HTML5 display-role reset for older browsers */
@@ -109,10 +152,6 @@ menu,
 nav,
 section {
   display: block;
-}
-
-body {
-  line-height: 1;
 }
 
 ol,
@@ -141,8 +180,6 @@ table {
 html,
 body {
   font-size: 16px;
-  font-family: "noto-sans", sans-serif;
-  font-weight: 500;
 }
 
 a {
@@ -163,6 +200,12 @@ button {
   height: 0;
   font-size: 0;
   text-indent: 99999;
+}
+
+input,
+button,
+select {
+  vertical-align: middle;
 }
 
 .window-top-bar {
@@ -195,7 +238,7 @@ button {
   display: inline-block;
 }
 .window-top-bar .title_wrap .title {
-  font-size: 12px;
+  font-size: 0.75rem;
   color: #fff;
 }
 .window-top-bar .btn_wrap {
@@ -248,7 +291,7 @@ header {
 }
 .header-content .page-link-wrap {
   display: flex;
-  font-size: 14px;
+  font-size: 0.875rem;
 }
 .header-content .page-link-wrap li.active {
   color: #e81123;
@@ -257,25 +300,69 @@ header {
   margin: 0 35px 0 45px;
 }
 
+.copy {
+  color: #a1a1a1;
+  font-size: 0.75rem;
+}
+
 .inner_wrap {
   width: 1200px;
   margin: 0 auto;
 }
 
-.main-body {
-  width: 100%;
+.search-box {
+  display: flex;
+  width: 462px;
+  align-items: center;
+  box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+}
+.search-box > * {
+  padding: 0 10px;
+  height: 56px;
+  border: none;
+  outline: none;
+}
+.search-box select {
+  border-right: 1px solid rgba(0, 0, 0, 0.2);
+}
+.search-box input {
+  width: 300px;
+}
+.search-box .icon-search {
+  width: 50px;
+  height: 50px;
+  background: url(/assets/img/icon-search.png) no-repeat center;
+}
+
+.index-bg {
+  position: fixed;
+  right: 0;
+  top: 0;
   height: 100vh;
-  background: url(/assets/img/index-bg.jpg) no-repeat center;
-  background-size: contain;
-  background-position: right 0;
+  display: block;
 }
 
 .index-main {
-  height: 100%;
+  height: calc(100vh - 131px);
 }
 .index-main .inner_wrap {
   position: absolute;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
+}
+.index-main .text-box .txt1 {
+  font-family: "MyriadPro-Regular";
+  letter-spacing: 2px;
+}
+.index-main .text-box .txt2 {
+  font-family: "palatinolinotype-bold";
+  font-size: 4rem;
+  margin: 20px 0;
+}
+.index-main .text-box .txt3 {
+  color: #5c5b5b;
+  line-height: 26px;
+  margin-bottom: 70px;
 }

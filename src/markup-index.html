@@ -3,14 +3,14 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>recipe</title>
+    <title>Recipe Bag</title>
     <link rel="stylesheet" href="/assets/css/theme.css" />
   </head>
   <body class="main-body">
     <div class="window-top-bar">
       <div class="title_wrap">
         <span class="favicon"><img src="/assets/img/favicon.png" alt="favicon" /></span>
-        <h1 class="title">Recipe</h1>
+        <h1 class="title">RecipeBag</h1>
       </div>
       <div class="btn_wrap">
         <button type="button" class="min"><span class="txt_hidden">window minimization</span></button>
@@ -51,16 +51,23 @@
             Enjoy delicious and healthy home-cooked meals today.
           </p>
         </div>
-        <div class="search-box">
-          <form action="#" method="post">
-            <input type="text" / placeholder="Search for the recipe you want.">
+        <form action="#" method="post">
+          <div class="search-box">
+            <select name="" id="selectBox">
+              <option value="" id="all">All</option>
+              <option value="" id="title">Title</option>
+              <option value="" id="Ingredients">Ingredients</option>
+              <option value="" id="Instructions">Instructions</option>
+            </select>
+            <input type="text" placeholder="Search for the recipe you want." />
             <button type="button" class="icon-search"><span class="txt_hidden">Visaul Saerch Button</span></button>
-          </form>
-        </div>
+          </div>
+        </form>
       </div>
+      <img src="/assets/img/index-bg.jpg" alt="" class="index-bg" />
     </main>
     <footer>
-      <div class="inner_warp">
+      <div class="inner_wrap">
         <p class="copy">made by kangsun & jinsoo (c) all rights reserved</p>
       </div>
     </footer>
