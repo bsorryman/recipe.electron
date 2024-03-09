@@ -1,0 +1,60 @@
+.main_body {
+  .container {
+    display: flex;
+  }
+
+  .left {
+    width: 100%;
+
+    .inner_wrap {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+  }
+
+  .right {
+    width: 50%;
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+
+  .index_img_warp {
+    height: 100vh;
+    background: #000;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .index_bg {
+    height: 100%;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .index_main {
+    .text_box {
+      margin-bottom: 70px;
+
+      .txt1 {
+        font-family: "MyriadPro-Regular";
+        letter-spacing: 2px;
+      }
+
+      .txt2 {
+        font-family: "palatinolinotype-bold";
+        font-size: 4rem;
+        margin: 20px 0;
+      }
+
+      .txt3 {
+        color: #5c5b5b;
+        line-height: 26px;
+      }
+    }
+  }
+}

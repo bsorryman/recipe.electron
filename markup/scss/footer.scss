@@ -1,0 +1,30 @@
+footer {
+  padding-bottom: 36px;
+}
+
+.search_footer {
+  text-align: center;
+  padding-bottom: 40px;
+}
+
+.popup_footer {
+  text-align: center;
+  padding: 40px 0;
+}
+
+.copy {
+  color: #a1a1a1;
+  font-size: 0.75rem;
+}
+
+.top_btn {
+  position: fixed;
+  right: calc(5% - 19px);
+  bottom: calc(5% - 19px);
+  width: 40px;
+  height: 40px;
+  box-shadow: 0px 0px 3px 1px rgba(0, 0, 0, 0.2);
+  background: #fff;
+  border-radius: 100%;
+  font-size: 12px;
+}

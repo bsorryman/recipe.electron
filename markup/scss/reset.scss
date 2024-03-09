@@ -1,0 +1,230 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+@font-face {
+  font-family: "MyriadPro-Regular";
+  src: url("/assets/font/MyriadPro-Regular.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "MyriadPro-Bold";
+  src: url("/assets/font/MyriadPro-Bold.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "NotoSansKR-Light";
+  src: url("/assets/font/NotoSansKR-Light.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "NotoSansKR-Regular";
+  src: url("/assets/font/NotoSansKR-Regular.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "NotoSansKR-SemiBold";
+  src: url("/assets/font/NotoSansKR-SemiBold.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "palatinolinotype-bold";
+  src: url("/assets/font/palatinolinotype_bold.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "palatinolinotype_roman";
+  src: url("/assets/font/palatinolinotype_roman.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* http://meyerweb.com/eric/tools/css/reset/ 
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+html,
+body,
+div,
+span,
+applet,
+object,
+iframe,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+a,
+abbr,
+acronym,
+address,
+big,
+cite,
+code,
+del,
+dfn,
+em,
+img,
+ins,
+kbd,
+q,
+s,
+samp,
+small,
+strike,
+strong,
+sub,
+sup,
+tt,
+var,
+b,
+u,
+i,
+center,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td,
+article,
+aside,
+canvas,
+details,
+embed,
+figure,
+figcaption,
+footer,
+header,
+hgroup,
+menu,
+nav,
+output,
+ruby,
+section,
+summary,
+time,
+mark,
+audio,
+video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font: inherit;
+  font-family: "NotoSansKR-Regular";
+  vertical-align: baseline;
+  color: #111;
+  box-sizing: border-box;
+}
+
+/* HTML5 display-role reset for older browsers */
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section {
+  display: block;
+}
+
+ol,
+ul {
+  list-style: none;
+}
+
+blockquote,
+q {
+  quotes: none;
+}
+
+blockquote:before,
+blockquote:after,
+q:before,
+q:after {
+  content: "";
+  content: none;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+// custom
+html,
+body {
+  font-size: 1rem;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+  box-sizing: border-box;
+}
+
+button {
+  border: none;
+  background: none;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.txt_hidden {
+  display: block;
+  overflow: hidden;
+  width: 0;
+  height: 0;
+  font-size: 0;
+  text-indent: 99999;
+}
+
+input,
+button,
+select {
+  vertical-align: middle;
+  font-weight: "NotoSansKR-Regular";
+  box-sizing: border-box;
+}
