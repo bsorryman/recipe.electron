@@ -144,12 +144,12 @@ export default class RcpWorker {
     }
   }  
 
-  viewRcpDetail(title, rcpImageSrc, rcpString, modalWindow) {
+  viewRcpDetail(rcpDetail, rcpImageSrc, rcpString, modalWindow) {
     // Center the modalWindow in the mainWindow      
     const parentBounds = (modalWindow.getParentWindow()).getBounds();
 
-    const x = parentBounds.x + Math.floor((parentBounds.width - 700) / 2);
-    const y = parentBounds.y + Math.floor((parentBounds.height - 560) / 2);
+    const x = parentBounds.x + Math.floor((parentBounds.width - 823) / 2);
+    const y = parentBounds.y + Math.floor((parentBounds.height - 600) / 2);
 
     modalWindow.setPosition(x, y);
     modalWindow.setOpacity(0);
@@ -167,7 +167,7 @@ export default class RcpWorker {
     }, 25);
 
     let viewResult = {
-      title: title,
+      rcpDetail: rcpDetail,
       rcpImageSrc: rcpImageSrc,
       rcpString: rcpString.toString()
     };

@@ -26,7 +26,6 @@
  * ```
  */
 
-import '../../index.css';
 import { Titlebar } from '../title_bar'
 
 window.$ = window.jQuery = require('jquery');
@@ -39,6 +38,8 @@ let gTotalRcp;
 //let gRange = 1;
 let gPageNum = 1;
 let gPageNomore = false;
+let gAllRecipe;
+
 /**
  * When loading a search_result page from another page, first set (gKeyword) and search
  */
@@ -48,14 +49,16 @@ window.onload = () => {
   const urlParams = new URLSearchParams(window.location.search);
   gKeyword = urlParams.get('keyword');
   gColumn = urlParams.get('column');
-  let allRecipe = urlParams.get('allRecipe');
+  gAllRecipe = urlParams.get('all');
 
-  if (allRecipe == 'Y') {
-    console.log('all recipe');
+  if (gAllRecipe == 'y') {
+    requestSearch('', 'all', 1);
+
+  } else {
+    $('#keyword').val(gKeyword);
+    $('#column').val(gColumn);
+    requestSearch(gKeyword, gColumn, 1);
   }
-
-  $('#keyword').val(gKeyword);
-  requestSearch(gKeyword, gColumn, 1);
 
 }
 
@@ -104,7 +107,6 @@ window.apis.resp_searchRcpList((event, searchResult) => {
  * @returns 
  */
 function displaySearchResult(searchResult) {
-  //$('#list').empty(); //init
   if (gTotalRcp == 0) {
     return;
   }
@@ -114,53 +116,13 @@ function displaySearchResult(searchResult) {
       let child = 
         `
         <li class="item">
-          <div class="img_wrap"><img src="/assets/img/item/item01.jpg" alt="" id="img_${value.id}" class="item_img"></div>
+          <div class="img_wrap"><img src="/assets/img/result_loader64.gif" alt="" id="img_${value.id}" class="item_img"></div>
           <h3 class="item_tit">${value.title}</h3>
           <div class="btn_wrap">
           <a href="javascript:void(0)" id="download_${value.id}" class="download download_btn">Download</a>
           <a href="javascript:void(0)" id="view_${value.id}" class="poput view_btn">View</a>
           </div>
         </li>         
-        `;
-      let childTest =
-        `
-        <li>
-          <div>
-            <div>
-              <img src="" class="link_img" id="img_${value.id}" />
-            </div>
-            <div>                
-              <!--
-              <div>
-                <strong>Recipe ID</strong>
-                <p>${value.id}</p>
-              </div>
-              -->
-              <div>
-                <strong>Title</strong>
-                <p>${value.title}</p>
-              </div>
-        `;
-      
-      // Convert 'ingredients' value in string format to array
-      /*
-      let ingredients = value.ingredients.replace(/""/g, '"');
-      let matchArray = ingredients.match(/'[^']*'|"[^"]*"/g);
-      let ingredientsArray = matchArray.map(match => match.slice(1, -1));
-
-      ingredientsArray.forEach(function (ingredient) {
-        child += `<p>* ${ingredient}</p>`;
-      });
-      */
-      childTest +=
-        `
-            </div>
-            <div>
-              <a href="javascript:void(0)" class="download_btn" id="download_${value.id}">Download Recipe File</a>
-              <a href="javascript:void(0)" class="view_btn" id="view_${value.id}">View Recipe</a>
-            </div>                        
-          </div>
-        </li>
         `;
 
       $('#list').append(child);
@@ -231,93 +193,13 @@ function setRcpViewButton() {
   });
 }
 
-
 // Infinite Scroll (pagination)
 window.addEventListener('scroll', function() {
   if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
-    requestSearch(gKeyword, gColumn, gPageNum+1); 
-  }
-});
-
-/**
- * A function that calculate the number of pages and display page buttons
- * @param {*} pageNum 
- */
-/*
-function displayPagination(pageNum) {
-  const RANGE_SIZE = 10;
-  let lastRange = (gLastPage / RANGE_SIZE <= 1) ? 1 : Math.ceil(gLastPage / RANGE_SIZE);
-
-  gRange = (pageNum <= 10) ? 1 : Math.ceil(pageNum / 10);
-
-  let startPageInRange = (gRange == 1) ? 1 : gRange * 10 - 9;
-
-  let idToken = 1;
-
-  for (let i = startPageInRange; i < startPageInRange + 10; i++) {
-    if (i > gLastPage) {
-      $("#pg_" + idToken).hide();
-
-    } else if (i == pageNum) {
-      $("#pg_" + idToken).show();
-      $('#pg_' + idToken).html(i);
-      $("#pg_" + idToken).css("color", "red");
-
+    if (gAllRecipe == 'y') {
+      requestSearch('', 'all', gPageNum+1);
     } else {
-      $("#pg_" + idToken).show();
-      $('#pg_' + idToken).html(i);
-      $("#pg_" + idToken).css("color", "black");
-
-    }
-    idToken++;
+      requestSearch(gKeyword, gColumn, gPageNum+1); 
+    }    
   }
-
-  if (gRange == 1) {
-    $("#pg_prev").hide();
-    $("#pg_first").hide();
-
-    if (lastRange == 1) {
-      $("#pg_next").hide();
-      $("#pg_last").hide();
-    } else {
-      $("#pg_next").show();
-      $("#pg_last").show();
-    }
-
-  } else if (gRange > 1 && gRange < lastRange) {
-    $("#pg_prev").show();
-    $("#pg_first").show();
-    $("#pg_next").show();
-    $("#pg_last").show();
-
-  } else {
-    $("#pg_prev").show();
-    $("#pg_first").show();
-    $("#pg_next").hide();
-    $("#pg_last").hide();
-
-  }
-
-}
-
-// paging envent
-$('.pg_list').on('click', function () {
-  requestSearch(gKeyword, gColumn, $(this).html());
 });
-
-$('#pg_first').on('click', function () {
-  requestSearch(gKeyword, gColumn, 1);
-});
-
-$('#pg_next').on('click', function () {
-  requestSearch(gKeyword, gColumn, 1 + (gRange * 10));
-});
-
-$('#pg_prev').on('click', function () {
-  requestSearch(gKeyword, gColumn, (gRange - 1) * 10);
-});
-
-$('#pg_last').on('click', function () {
-  requestSearch(gKeyword, gColumn, gLastPage);
-});
-*/

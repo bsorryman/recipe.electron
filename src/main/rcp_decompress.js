@@ -37,6 +37,17 @@ export default class RcpDecompress {
   decompressRecipeZipFile(zipFileResult, viewRcpDetail, modalWindow) {
     // zip file reuslt
     let title = zipFileResult.title;
+    let id = zipFileResult.id;
+    let ingredients = zipFileResult.ingredients;
+    let instructions = zipFileResult.instructions;
+
+    let rcpDetail = {
+      title: title,
+      id: id,
+      ingredients: ingredients,
+      instructions: instructions
+    };
+
     let imageName = zipFileResult.image_name;
     let zipBuffer = zipFileResult.recipe_zip_file;
 
@@ -53,7 +64,7 @@ export default class RcpDecompress {
       let rcpString = fs.readFileSync(txtFilePath);
       let rcpImageSrc = nativeImage.createFromPath(jpgFilePath).toDataURL();
 
-      viewRcpDetail(title, rcpImageSrc, rcpString, modalWindow);
+      viewRcpDetail(rcpDetail, rcpImageSrc, rcpString, modalWindow);
 
       // delete temp file
       fs.unlink(zipFilePath, (err) => {

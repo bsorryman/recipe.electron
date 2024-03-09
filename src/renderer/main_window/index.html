@@ -8,7 +8,7 @@
   </head>
   <body class="main_body">
     <div class="window_top_bar">
-      <div class="title_wrap">
+      <div class="title_wrap" style="-webkit-app-region: drag;">
         <span class="favicon"><img src="../assets/img/favicon.png" alt="favicon" /></span>
         <h1 class="title">RecipeBag</h1>
       </div>
@@ -33,7 +33,7 @@
               <a href="../main_window/index.html">HOME</a>
             </li>
             <li class="sample">
-              <a href="../search_result/index.html">All Recipe</a>
+              <a href="../search_result/index.html?all=y">All Recipe</a>
             </li>
           </ul>
         </div>
@@ -60,7 +60,7 @@
               <option value="instructions">Instructions</option>
             </select>
             <input type="text" id="keyword" name="keyword" placeholder="Search for the recipe you want." />
-            <button type="button" class="icon_search"><span class="txt_hidden">Visaul Saerch Button</span></button>
+            <button type="submit" class="icon_search"><span class="txt_hidden">Visaul Saerch Button</span></button>
           </div>
         </form>
     </main>
