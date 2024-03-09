@@ -31,7 +31,7 @@ const createWindow = () => {
   const modalWindow = new BrowserWindow({
     modal: true,
     parent: mainWindow,
-    width: 700,
+    width: 820,
     height: 560,
     minWidth: 700,
     minHeight: 560,    

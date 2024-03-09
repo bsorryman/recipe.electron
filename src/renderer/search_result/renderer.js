@@ -48,8 +48,13 @@ window.onload = () => {
   const urlParams = new URLSearchParams(window.location.search);
   gKeyword = urlParams.get('keyword');
   gColumn = urlParams.get('column');
-  $('#keyword').val(gKeyword);
+  let allRecipe = urlParams.get('allRecipe');
 
+  if (allRecipe == 'Y') {
+    console.log('all recipe');
+  }
+
+  $('#keyword').val(gKeyword);
   requestSearch(gKeyword, gColumn, 1);
 
 }
@@ -106,7 +111,18 @@ function displaySearchResult(searchResult) {
   let idList = [];
   try {
     searchResult.forEach((value, index) => {
-      let child =
+      let child = 
+        `
+        <li class="item">
+          <div class="img_wrap"><img src="/assets/img/item/item01.jpg" alt="" id="img_${value.id}" class="item_img"></div>
+          <h3 class="item_tit">${value.title}</h3>
+          <div class="btn_wrap">
+          <a href="javascript:void(0)" id="download_${value.id}" class="download download_btn">Download</a>
+          <a href="javascript:void(0)" id="view_${value.id}" class="poput view_btn">View</a>
+          </div>
+        </li>         
+        `;
+      let childTest =
         `
         <li>
           <div>
@@ -136,7 +152,7 @@ function displaySearchResult(searchResult) {
         child += `<p>* ${ingredient}</p>`;
       });
       */
-      child +=
+      childTest +=
         `
             </div>
             <div>
