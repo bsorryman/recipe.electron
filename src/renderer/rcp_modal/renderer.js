@@ -26,7 +26,6 @@
  * ```
  */
 
-import '../../index.css';
 window.$ = window.jQuery = require('jquery');
 
 import { Titlebar } from '../title_bar'
@@ -40,12 +39,22 @@ window.onload = () => {
  * and displays it in a modal window
  */
 window.apis.resp_rcpViewByDecompress((event, viewResult)=>{
-    $('textarea').css('height', '0px'); // init
-    $('#title').html(viewResult.title+" recipe");
-    $('#rcp_image').attr('src', viewResult.rcpImageSrc);
-    $('#rcp_string').val(viewResult.rcpString);
-  
-    const textarea = document.querySelector('textarea')
-    const textHeight = textarea.scrollHeight
-    textarea.style.height = textHeight + 'px'
+  $('#title').html(viewResult.rcpDetail.title);
+  $('#titleBar').html(viewResult.rcpDetail.title+" recipe");
+  $('#rcp_image').attr('src', viewResult.rcpImageSrc);
+
+  let ingredients = viewResult.rcpDetail.ingredients.replace(/""/g, '"');
+  let matchArray = ingredients.match(/'[^']*'|"[^"]*"/g);
+  let ingredientsArray = matchArray.map(match => match.slice(1, -1));
+  let ingredientsString = '';
+  ingredientsArray.forEach(function (ingredient) {
+    ingredientsString += `* ${ingredient} <br>`;
+  });
+
+  $('#ingredients').html(ingredientsString);
+
+  let instructionsString = viewResult.rcpDetail.instructions.replace(/\n/g, '<br>');;
+
+  $('#instructions').html(instructionsString);
+
 })

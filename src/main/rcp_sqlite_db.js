@@ -117,23 +117,43 @@ export default class RcpSqliteDB {
       column = 'tb_fts_recipe'
     }
 
-    const resultTable = this.db.prepare(
-      `
-      SELECT id, title, ingredients, instructions
-      FROM tb_fts_recipe
-      WHERE ${column} MATCH '${keyword}'
-      ORDER BY bm25(tb_fts_recipe, 10.0, 3.0)
-      LIMIT ${offset}, 10
-      `
-    ).all();
+    let searchQuery;
+    let totalQuery;
 
-    const resultTotal = this.db.prepare(
-      `
-      SELECT COUNT(*) AS total
-      FROM tb_fts_recipe
-      WHERE ${column} MATCH '${keyword}'
-      `
-    ).all();
+    if (keyword == null || keyword == '') {
+      searchQuery =       
+        `
+        SELECT id, title, ingredients, instructions
+        FROM tb_fts_recipe
+        LIMIT ${offset}, 10
+        `;      
+
+      totalQuery = 
+        `
+        SELECT COUNT(*) AS total
+        FROM tb_fts_recipe
+        `;      
+    } else {
+      searchQuery =       
+        `
+        SELECT id, title, ingredients, instructions
+        FROM tb_fts_recipe
+        WHERE ${column} MATCH '${keyword}'
+        ORDER BY bm25(tb_fts_recipe, 10.0, 3.0)
+        LIMIT ${offset}, 10
+        `;
+
+      totalQuery = 
+        `
+        SELECT COUNT(*) AS total
+        FROM tb_fts_recipe
+        WHERE ${column} MATCH '${keyword}'
+        `;
+
+    }
+
+    const resultTable = this.db.prepare(searchQuery).all();
+    const resultTotal = this.db.prepare(totalQuery).all();
 
     const result = { resultTable, resultTotal }
 
@@ -161,7 +181,7 @@ export default class RcpSqliteDB {
 
     const result = this.db.prepare(
       `
-      SELECT id, title, image_name, recipe_zip_file
+      SELECT id, title, ingredients, instructions, image_name, recipe_zip_file
       FROM tb_recipe
       WHERE id = ${id} 
       `
