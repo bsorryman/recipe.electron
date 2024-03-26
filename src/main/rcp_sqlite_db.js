@@ -136,7 +136,7 @@ export default class RcpSqliteDB {
     } else {
       searchQuery =       
         `
-        SELECT id, title, ingredients, instructions
+        SELECT id, title
         FROM tb_fts_recipe
         WHERE ${column} MATCH '${keyword}'
         ORDER BY bm25(tb_fts_recipe, 10.0, 3.0)
@@ -189,4 +189,30 @@ export default class RcpSqliteDB {
 
     return result;
   }
+
+  selectRecipeByIdAndKeyword(keyword, id) {
+    if (this.db == null)
+      return '';
+
+    const result = this.db.prepare(
+      `
+      SELECT a.id, b.title as title_no_mark, a.title, a.ingredients, a.instructions, b.image_name, b.image_file
+      FROM (
+        SELECT id,
+          highlight(tb_fts_recipe, 0, '<mark>', '</mark>') AS title,
+          highlight(tb_fts_recipe, 1, '<mark>', '</mark>') AS ingredients,
+          highlight(tb_fts_recipe, 2, '<mark>', '</mark>') AS instructions
+        FROM tb_fts_recipe
+        WHERE tb_fts_recipe MATCH '${keyword}'
+          AND id = ${id}
+      ) a INNER JOIN (
+        SELECT id, title, image_name, image_file
+        FROM tb_recipe
+        WHERE id = ${id}
+      ) b ON a.id = b.id;
+      `
+    ).all();
+
+    return result;
+  }  
 }

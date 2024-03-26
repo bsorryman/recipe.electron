@@ -134,6 +134,17 @@ export default class RcpIPC {
     });
   }
 
+  addRcpView() {
+    ipcMain.on('req_rcpView', (event, keyword, id) => {
+      let data = {
+        keyword: keyword,
+        id: id
+      };    
+      this.rcpWorker.postMessageToWorker('selectRecipeByIdAndKeyword', data);
+
+    });
+  }  
+
   registerIPC() {
     this.addTitleBar();
     this.addSearchRcpList();
@@ -141,6 +152,7 @@ export default class RcpIPC {
     this.addRcpZipFile();
     this.addRcpViewByDecompress();
     this.addShowMessage();
+    this.addRcpView();
   }
 
 }

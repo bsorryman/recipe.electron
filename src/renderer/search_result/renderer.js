@@ -188,7 +188,7 @@ function setRcpViewButton() {
     value.onclick = () => {
       let rcpId = value.id.substring(5, value.id.length);
       // Request decompressed zip data from the main process.
-      window.apis.req_rcpViewByDecompress(rcpId);
+      window.apis.req_rcpView(gKeyword, rcpId);
     }
   });
 }

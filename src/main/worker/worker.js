@@ -49,6 +49,14 @@ function chooseQuery(msgId, data) {
       }
 
       break;
+
+    case 'selectRecipeByIdAndKeyword':
+      let viewKeyword = data.keyword;
+      let viewId = data.id;
+      dbResult = db.selectRecipeByIdAndKeyword(viewKeyword, viewId);
+      replyId = 'resp_rcpView';
+
+      break;
   }
 
   let result = {

@@ -38,6 +38,7 @@ window.onload = () => {
  * A listener that receives decompressed recipe data (Image, All data) 
  * and displays it in a modal window
  */
+/*
 window.apis.resp_rcpViewByDecompress((event, viewResult)=>{
   $('#title').html(viewResult.rcpDetail.title);
   $('#titleBar').html(viewResult.rcpDetail.title+" recipe");
@@ -54,6 +55,30 @@ window.apis.resp_rcpViewByDecompress((event, viewResult)=>{
   $('#ingredients').html(ingredientsString);
 
   let instructionsString = viewResult.rcpDetail.instructions.replace(/\n/g, '<br>');;
+
+  $('#instructions').html(instructionsString);
+
+})
+*/
+
+window.apis.resp_rcpView((event, viewResult)=>{
+  $('#title').html(viewResult.title);
+  $('#titleBar').html(viewResult.title_no_mark+" recipe");
+  $('#rcp_image').attr('src', viewResult.image_file);
+  console.log(viewResult.image_file);
+  console.log(viewResult.image_name);
+
+  let ingredients = viewResult.ingredients.replace(/""/g, '"');
+  let matchArray = ingredients.match(/'[^']*'|"[^"]*"/g);
+  let ingredientsArray = matchArray.map(match => match.slice(1, -1));
+  let ingredientsString = '';
+  ingredientsArray.forEach(function (ingredient) {
+    ingredientsString += `* ${ingredient} <br>`;
+  });
+
+  $('#ingredients').html(ingredientsString);
+
+  let instructionsString = viewResult.instructions.replace(/\n/g, '<br>');;
 
   $('#instructions').html(instructionsString);
 

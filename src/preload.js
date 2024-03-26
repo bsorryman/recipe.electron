@@ -22,6 +22,9 @@ contextBridge.exposeInMainWorld('apis', {
     req_rcpViewByDecompress: (id) => ipcRenderer.send("req_rcpViewByDecompress", id),
     resp_rcpViewByDecompress: (viewResult) => ipcRenderer.on("resp_rcpViewByDecompress", viewResult),
 
-    req_showMessage: (type, title, message) => ipcRenderer.send("req_showMessage", type, title, message )
+    req_showMessage: (type, title, message) => ipcRenderer.send("req_showMessage", type, title, message ),
     
+    req_rcpView: (keyword, id) => ipcRenderer.send("req_rcpView", keyword, id),
+    resp_rcpView: (viewResult) => ipcRenderer.on("resp_rcpView", viewResult)
+
   });

@@ -54,6 +54,14 @@ export default class RcpWorker {
         let zipFileResult = workerResult.dbResult[0];
         let rcpDecompress = new RcpDecompress();
         rcpDecompress.decompressRecipeZipFile(zipFileResult, this.viewRcpDetail, this.modalWindow);
+
+      } else if (workerResult.replyId == 'resp_rcpView') {
+        let viewResult = workerResult.dbResult[0];
+        let imageFile = nativeImage.createFromBuffer(viewResult.image_file).toDataURL();
+
+        viewResult.image_file = imageFile;
+        this.showRcpView(this.modalWindow);
+        this.modalWindow.webContents.postMessage('resp_rcpView', viewResult);
       }
 
       this.mainWindow.webContents.postMessage(workerResult.replyId, workerResult.dbResult);
@@ -176,4 +184,29 @@ export default class RcpWorker {
 
     return;
   }  
+
+  showRcpView(modalWindow) {
+    // Center the modalWindow in the mainWindow      
+    const parentBounds = (modalWindow.getParentWindow()).getBounds();
+
+    const x = parentBounds.x + Math.floor((parentBounds.width - 823) / 2);
+    const y = parentBounds.y + Math.floor((parentBounds.height - 600) / 2);
+
+    modalWindow.setPosition(x, y);
+    modalWindow.setOpacity(0);
+    modalWindow.show();
+
+    // fade in effect
+    let opacity = 0;
+    const interval = setInterval(() => {
+      opacity += 0.25;
+      modalWindow.setOpacity(opacity);
+
+      if (opacity >= 1) {
+        clearInterval(interval);
+      }
+    }, 25);
+
+    return;
+  }    
 }
