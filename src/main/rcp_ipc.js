@@ -1,4 +1,4 @@
-const { ipcMain} = require('electron');
+const { ipcMain, dialog} = require('electron');
 import RcpWorker from './rcp_worker';
 
 export default class RcpIPC {
@@ -128,12 +128,19 @@ export default class RcpIPC {
     });
   }
 
+  addShowMessage() {
+    ipcMain.on('req_showMessage', (event, type, title, message)=>{
+      dialog.showMessageBox(this.mainWindow, {type: type, title: title, message: message});
+    });
+  }
+
   registerIPC() {
     this.addTitleBar();
     this.addSearchRcpList();
     this.addRcpimageSrc();
     this.addRcpZipFile();
     this.addRcpViewByDecompress();
+    this.addShowMessage();
   }
 
 }

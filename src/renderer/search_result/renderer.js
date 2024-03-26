@@ -78,10 +78,10 @@ function requestSearch(keyword, column, pageNum) {
 window.apis.resp_searchRcpList((event, searchResult) => {
   if (searchResult.resultTable.length == 0) {
     if (gPageNum>1 && gPageNomore == false) {
-      alert('There are no more results to display.');
+      window.apis.req_showMessage('info', 'Info', 'There are no more results to display.');
       gPageNomore = true;
     } else if (gPageNum==1 && gPageNomore == false) {
-      alert('No results were found for your search.');
+      window.apis.req_showMessage('info', 'Info', 'No results were found for your search.');
       $('#keyword').trigger('focus');
   
       $('#list').empty(); //search result hide
@@ -94,7 +94,7 @@ window.apis.resp_searchRcpList((event, searchResult) => {
     gTotalRcp = searchResult.resultTotal[0].total;
 
   } else {
-    alert('Error');
+    window.apis.req_showMessage('error', 'Error', 'Error');
   }
 
   //gLastPage = Math.ceil(gTotalRcp / 10);
