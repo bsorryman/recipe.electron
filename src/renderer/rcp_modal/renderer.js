@@ -65,8 +65,6 @@ window.apis.resp_rcpView((event, viewResult)=>{
   $('#title').html(viewResult.title);
   $('#titleBar').html(viewResult.title_no_mark+" recipe");
   $('#rcp_image').attr('src', viewResult.image_file);
-  console.log(viewResult.image_file);
-  console.log(viewResult.image_name);
 
   let ingredients = viewResult.ingredients.replace(/""/g, '"');
   let matchArray = ingredients.match(/'[^']*'|"[^"]*"/g);
@@ -83,3 +81,11 @@ window.apis.resp_rcpView((event, viewResult)=>{
   $('#instructions').html(instructionsString);
 
 })
+
+$(document).on('keydown', (event) => {
+  let key = event.key;
+  
+  if(key === 'Escape') {
+    window.apis.close('modal');
+  }  
+});

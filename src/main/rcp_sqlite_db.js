@@ -194,24 +194,33 @@ export default class RcpSqliteDB {
     if (this.db == null)
       return '';
 
-    const result = this.db.prepare(
-      `
-      SELECT a.id, b.title as title_no_mark, a.title, a.ingredients, a.instructions, b.image_name, b.image_file
-      FROM (
-        SELECT id,
-          highlight(tb_fts_recipe, 0, '<mark>', '</mark>') AS title,
-          highlight(tb_fts_recipe, 1, '<mark>', '</mark>') AS ingredients,
-          highlight(tb_fts_recipe, 2, '<mark>', '</mark>') AS instructions
-        FROM tb_fts_recipe
-        WHERE tb_fts_recipe MATCH '${keyword}'
-          AND id = ${id}
-      ) a INNER JOIN (
-        SELECT id, title, image_name, image_file
+    let query = '';
+    if (keyword==null || keyword=='') {
+      query = `
+        SELECT id, title, ingredients, instructions, image_name, image_file
         FROM tb_recipe
         WHERE id = ${id}
-      ) b ON a.id = b.id;
-      `
-    ).all();
+      `;
+    } else {
+      query = `
+        SELECT a.id, b.title as title_no_mark, a.title, a.ingredients, a.instructions, b.image_name, b.image_file
+        FROM (
+          SELECT id,
+            highlight(tb_fts_recipe, 0, '<mark>', '</mark>') AS title,
+            highlight(tb_fts_recipe, 1, '<mark>', '</mark>') AS ingredients,
+            highlight(tb_fts_recipe, 2, '<mark>', '</mark>') AS instructions
+          FROM tb_fts_recipe
+          WHERE tb_fts_recipe MATCH '${keyword}'
+            AND id = ${id}
+        ) a INNER JOIN (
+          SELECT id, title, image_name, image_file
+          FROM tb_recipe
+          WHERE id = ${id}
+        ) b ON a.id = b.id;
+      `;    
+    }
+
+    const result = this.db.prepare(query).all();
 
     return result;
   }  

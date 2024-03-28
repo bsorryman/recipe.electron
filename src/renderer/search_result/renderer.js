@@ -194,7 +194,7 @@ function setRcpViewButton() {
 }
 
 // Infinite Scroll (pagination)
-window.addEventListener('scroll', function() {
+window.addEventListener('scroll', ()=>{
   if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
     if (gAllRecipe == 'y') {
       requestSearch('', 'all', gPageNum+1);
@@ -203,3 +203,7 @@ window.addEventListener('scroll', function() {
     }    
   }
 });
+
+$('.top_btn').on('click', ()=>{
+  $("html, body").animate({ scrollTop: 0 }, "fast"); 
+})
